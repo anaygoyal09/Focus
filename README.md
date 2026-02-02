@@ -33,13 +33,8 @@
 
 ### Download
 
-<p align="center">
-  <a href="../../releases/download/v1.0.0/Focus.dmg" style="display: inline-block; padding: 12px 24px; background-color: #0969da; color: white; text-decoration: none; border-radius: 6px; font-weight: bold; font-size: 16px;">
-    ⬇️ Download Focus.dmg
-  </a>
-</p>
+Download the latest `Focus.dmg` from the [Releases](https://github.com/anaygoyal/Focus/releases) page, then:
 
-Or download from the [Releases](https://github.com/anaygoyal/Focus/releases) page
 2. Open the DMG file
 3. Drag the **Focus** app to your **Applications** folder
 4. Launch Focus from your Applications folder or Spotlight
