@@ -2,7 +2,6 @@ import SwiftUI
 
 struct MenuBarView: View {
     @EnvironmentObject var appState: AppState
-    @EnvironmentObject var focusManager: FocusManager
     @Environment(\.openWindow) var openWindow
     
     var body: some View {
@@ -28,20 +27,12 @@ struct MenuBarView: View {
                let mode = appState.focusModes.first(where: { $0.id == activeId }) {
                 
                 VStack(spacing: 0) {
-                    // Mode name badge and Stop button
+                    // Mode name badge
                     HStack {
                         Label(mode.name, systemImage: "target")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundColor(.secondary)
-                        
                         Spacer()
-                        
-                        Button("Stop") {
-                            appState.activeModeId = nil
-                            appState.saveData()
-                        }
-                        .buttonStyle(.bordered)
-                        .controlSize(.mini)
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, 12)
@@ -64,19 +55,9 @@ struct MenuBarView: View {
                         .font(.system(size: 12))
                         .foregroundColor(.secondary)
                     
-                    if let firstMode = appState.focusModes.first {
-                        Button("Start \(firstMode.name)") {
-                            appState.activeModeId = firstMode.id
-                            appState.saveData()
-                        }
-                        .buttonStyle(.borderedProminent)
-                        .controlSize(.small)
-                        .padding(.top, 4)
-                    } else {
-                        Text("Open settings to start a session")
-                            .font(.system(size: 11))
-                            .foregroundStyle(.tertiary)
-                    }
+                    Text("Open settings to start a session")
+                        .font(.system(size: 11))
+                        .foregroundStyle(.tertiary)
                 }
                 .padding(.vertical, 24)
             }
@@ -97,24 +78,6 @@ struct MenuBarView: View {
                 }
             }
             .padding(.vertical, 6)
-            
-            // Debug / Test Footer
-            HStack {
-                Button(action: { focusManager.sendTestNotification() }) {
-                    Image(systemName: "bell.badge.fill")
-                        .font(.system(size: 10))
-                        .foregroundColor(.secondary)
-                    Text("Test")
-                        .font(.system(size: 10))
-                        .foregroundColor(.secondary)
-                }
-                .buttonStyle(.plain)
-                .help("Send a test notification immediately")
-                
-                Spacer()
-            }
-            .padding(.horizontal, 16)
-            .padding(.bottom, 8)
         }
         .frame(width: 280)
         .background(VisualEffectBackground())

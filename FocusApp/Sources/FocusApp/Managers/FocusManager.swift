@@ -10,7 +10,7 @@ class FocusManager: ObservableObject {
     private var workspace = NSWorkspace.shared
     private var cancellables = Set<AnyCancellable>()
     private var blockerWindow: NSWindow?
-    // Delegate moved to AppDelegate
+    private let notificationDelegate = NotificationDelegate()
     
     // Track last notification sent to avoid spamming
     private var lastNotificationTime: Date = Date.distantPast
@@ -19,50 +19,28 @@ class FocusManager: ObservableObject {
     
     init(appState: AppState) {
         self.appState = appState
-        // Delegate setup handled in AppDelegate
+        setupNotifications()
         startMonitoring()
     }
     
-    // Legacy support kept for reference or re-request
-    func setupNotifications() {
+    private func setupNotifications() {
         let center = UNUserNotificationCenter.current()
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
+        center.delegate = notificationDelegate
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            if granted {
+                print("Notification permission granted")
+            } else if let error = error {
+                print("Notification permission error: \(error)")
+            } else {
+                print("Notification permission denied")
+            }
+        }
     }
     
     private func startMonitoring() {
         // Run loop every 1 second
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.checkCurrentActivity()
-            self?.updateMenuBar()
-        }
-    }
-
-    private func updateMenuBar() {
-        guard let activeMode = appState.focusModes.first(where: { $0.id == appState.activeModeId }) else {
-            DispatchQueue.main.async {
-                if self.appState.menuBarText != "" { self.appState.menuBarText = "" }
-                if self.appState.menuBarIcon != "pawprint.fill" { self.appState.menuBarIcon = "pawprint.fill" }
-            }
-            return
-        }
-
-        // Look for Arc specifically as requested
-        if let arcApp = activeMode.apps.first(where: { $0.name.localizedCaseInsensitiveContains("Arc") || $0.bundleIdentifier == "company.thebrowser.Browser" }) {
-             let remaining = Int(arcApp.timeRemaining)
-             let minutes = remaining / 60
-             let seconds = remaining % 60
-             
-             let newText = String(format: "Arc: %d:%02d", minutes, seconds)
-             DispatchQueue.main.async {
-                 if self.appState.menuBarText != newText { self.appState.menuBarText = newText }
-                 self.appState.menuBarIcon = "timer"
-             }
-        } else {
-             // Fallback if Arc is not tracked but we are active
-             DispatchQueue.main.async {
-                 self.appState.menuBarText = ""
-                 self.appState.menuBarIcon = "target"
-             }
         }
     }
     
@@ -80,16 +58,7 @@ class FocusManager: ObservableObject {
         if bundleId == Bundle.main.bundleIdentifier { return } // Don't block ourselves
         
         // Find if this app is in the current mode
-        // Robust matching for Arc browser which might have inconsistent naming/ID expectations
-        if let appIndex = appState.focusModes[activeModeIndex].apps.firstIndex(where: { trackedApp in
-            if trackedApp.bundleIdentifier == bundleId { return true }
-            // Special handling for Arc: if the tracked app seems to be Arc, and the front app is Arc
-            if (trackedApp.name.localizedCaseInsensitiveContains("Arc") || trackedApp.bundleIdentifier == "company.thebrowser.Browser"),
-               (frontApp.localizedName?.localizedCaseInsensitiveContains("Arc") == true || bundleId == "company.thebrowser.Browser") {
-                   return true
-            }
-            return false
-        }) {
+        if let appIndex = appState.focusModes[activeModeIndex].apps.firstIndex(where: { $0.bundleIdentifier == bundleId }) {
             var trackedApp = appState.focusModes[activeModeIndex].apps[appIndex]
             
             // Increment usage
@@ -168,15 +137,15 @@ class FocusManager: ObservableObject {
     
     private func checkAndSendNotification(remaining: TimeInterval, appName: String) {
         for threshold in appState.warningThresholds {
-            // Robust check: Trigger if we are below the threshold but within a reasonable window (e.g. passed it in last 5 seconds)
-            // This prevents missing it due to timer lag, but prevents spamming "30m remaining" when only 5m are left.
-            if remaining <= (threshold + 0.5) && remaining > (threshold - 5.0) {
+            // Check if we're at this threshold (within 1 second)
+            if abs(remaining - threshold) < 1.5 {
                 // Check if we already notified for this threshold for this app
+                let key = "\(appName)_\(Int(threshold))"
                 if notifiedThresholds[appName]?.contains(threshold) == true {
-                    continue
+                    return
                 }
                 
-                // Mark as notified immediately
+                // Mark as notified
                 if notifiedThresholds[appName] == nil {
                     notifiedThresholds[appName] = []
                 }
@@ -192,71 +161,43 @@ class FocusManager: ObservableObject {
                 
                 let urgency = threshold <= 60 ? "⚠️ " : ""
                 sendNotification(title: "\(urgency)Time Alert", body: message)
-                
-                // We found the relevant threshold for this moment, break to avoid double notifications (though range check prevents most)
                 break
             }
         }
     }
     
     private func sendNotification(title: String, body: String) {
-        print("Sending Notification: \(title)")
-
-        let center = UNUserNotificationCenter.current()
-        center.getNotificationSettings { settings in
-            switch settings.authorizationStatus {
-            case .authorized, .provisional, .ephemeral:
-                self.scheduleUNNotification(title: title, body: body)
-            case .notDetermined:
-                center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
-                    if granted {
-                        self.scheduleUNNotification(title: title, body: body)
-                    } else {
-                        self.deliverLegacyNotification(title: title, body: body)
-                    }
-                }
-            case .denied:
-                self.deliverLegacyNotification(title: title, body: body)
-            @unknown default:
-                self.deliverLegacyNotification(title: title, body: body)
-            }
-        }
-    }
-
-    private func scheduleUNNotification(title: String, body: String) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
-        content.sound = UNNotificationSound.default
-        // .timeSensitive requires entitlement, .active is standard for now
-        content.interruptionLevel = .active
-
-        // Use a very short trigger to improve delivery reliability in menu bar apps
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        content.sound = .default
+        // Critical for notifications to show when app is focused (handled by delegate, but good practice)
+        content.interruptionLevel = .active 
+        
+        // Using a tiny delay often helps with reliability compared to nil trigger
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+        
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("UNNotification Error: \(error.localizedDescription)")
-            } else {
-                print("UNNotification scheduled")
+                print("Error scheduling notification: \(error)")
             }
         }
-    }
-
-    private func deliverLegacyNotification(title: String, body: String) {
-        // Fallback for denied permission or older system behavior
-        let nsNotification = NSUserNotification()
-        nsNotification.title = title
-        nsNotification.informativeText = body
-        nsNotification.soundName = NSUserNotificationDefaultSoundName
-        NSUserNotificationCenter.default.deliver(nsNotification)
     }
     
     // For testing/debugging
     func sendTestNotification() {
-        print("Sending test notification manually...")
-        sendNotification(title: "Focus Test", body: "This is a test notification from Focus. If you see this, notifications are working!")
+        print("Sending test notification...")
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
+            print("Notification settings: \(settings)")
+            if settings.authorizationStatus != .authorized {
+                print("Notifications not authorized!")
+                // Try requesting again
+                self.setupNotifications()
+            }
+        }
+        sendNotification(title: "Focus Test", body: "This is a test notification from Focus.")
     }
     
     func extendTime(minutes: Double) {
@@ -281,5 +222,17 @@ class FocusManager: ObservableObject {
         // Close window
         blockerWindow?.close()
         blockerWindow = nil
+    }
+}
+
+// Notification delegate to show notifications even when app is in foreground
+class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        // Show notification even when app is in foreground
+        completionHandler([.banner, .sound, .badge])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        completionHandler()
     }
 }

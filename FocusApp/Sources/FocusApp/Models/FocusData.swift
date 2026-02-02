@@ -26,8 +26,6 @@ class AppState: ObservableObject {
     @Published var activeModeId: UUID?
     @Published var isBlocking: Bool = false
     @Published var currentBlockedApp: TrackedApp?
-    @Published var menuBarIcon: String = "pawprint.fill"
-    @Published var menuBarText: String = ""
     
     // Notifications Configuration - more frequent as time runs out
     // 30m, 25m, 15m, 10m, 5m, 4m, 3m, 2m, 1m, 30s, 10s, 5s
