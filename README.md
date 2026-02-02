@@ -33,17 +33,10 @@
 
 ### Download
 
-<p align="center">
-  <strong>
-    <a href="dist/Focus.dmg">
-      ⬇️ Download Focus.dmg
-    </a>
-  </strong>
-</p>
-
-1. Open the DMG file
-2. Drag the **Focus** app to your **Applications** folder
-3. Launch Focus from your Applications folder or Spotlight
+1. Download the latest `Focus.dmg` from the [Releases](https://github.com/anaygoyal/Focus/releases) page
+2. Open the DMG file
+3. Drag **Focus.app** to your **Applications** folder
+4. Launch Focus from your Applications folder or Spotlight
 
 > **Note:** On first launch, you may need to right-click the app and select "Open" to bypass Gatekeeper, as the app is not notarized.
 

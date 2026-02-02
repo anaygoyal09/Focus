@@ -153,7 +153,23 @@ class FocusManager: ObservableObject {
     private func sendNotification(title: String, body: String) {
         print("[Notification] Sending: \(title) - \(body)")
         
-        // Method 1: Modern UNUserNotificationCenter
+        // Method 1: AppleScript - MOST RELIABLE for non-sandboxed apps
+        DispatchQueue.global(qos: .userInitiated).async {
+            let script = """
+            display notification "\(body)" with title "\(title)" sound name "default"
+            """
+            if let appleScript = NSAppleScript(source: script) {
+                var error: NSDictionary?
+                appleScript.executeAndReturnError(&error)
+                if let error = error {
+                    print("[Notification] AppleScript error: \(error)")
+                } else {
+                    print("[Notification] AppleScript notification sent successfully")
+                }
+            }
+        }
+        
+        // Method 2: Modern UNUserNotificationCenter (backup)
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
@@ -165,19 +181,7 @@ class FocusManager: ObservableObject {
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
                 print("[Notification] UNUserNotification error: \(error)")
-            } else {
-                print("[Notification] UNUserNotification scheduled successfully")
             }
-        }
-        
-        // Method 2: Legacy NSUserNotification (deprecated but reliable for non-sandboxed apps)
-        DispatchQueue.main.async {
-            let legacyNotification = NSUserNotification()
-            legacyNotification.title = title
-            legacyNotification.informativeText = body
-            legacyNotification.soundName = NSUserNotificationDefaultSoundName
-            NSUserNotificationCenter.default.deliver(legacyNotification)
-            print("[Notification] NSUserNotification delivered")
         }
     }
     
