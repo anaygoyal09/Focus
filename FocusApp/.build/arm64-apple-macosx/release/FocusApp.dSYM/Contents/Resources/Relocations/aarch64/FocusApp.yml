@@ -1,6 +1,6 @@
 ---
 triple:          'arm64-apple-darwin'
-binary-path:     '/Users/anaygoyal/Downloads/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp'
+binary-path:     '/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp'
 relocations:
   - { offset: 0xEECD6, size: 0x8, addend: 0x0, symName: '_$s8FocusAppAAVAB7SwiftUI0B0AAWl', symObjAddr: 0xBDC, symBinAddr: 0x100001FFC, symSize: 0x40 }
   - { offset: 0xEECEA, size: 0x8, addend: 0x0, symName: '_$s8FocusAppAAVwCP', symObjAddr: 0xC1C, symBinAddr: 0x10000203C, symSize: 0x2C }
