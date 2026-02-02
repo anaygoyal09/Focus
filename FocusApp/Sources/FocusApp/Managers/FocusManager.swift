@@ -80,7 +80,16 @@ class FocusManager: ObservableObject {
         if bundleId == Bundle.main.bundleIdentifier { return } // Don't block ourselves
         
         // Find if this app is in the current mode
-        if let appIndex = appState.focusModes[activeModeIndex].apps.firstIndex(where: { $0.bundleIdentifier == bundleId }) {
+        // Robust matching for Arc browser which might have inconsistent naming/ID expectations
+        if let appIndex = appState.focusModes[activeModeIndex].apps.firstIndex(where: { trackedApp in
+            if trackedApp.bundleIdentifier == bundleId { return true }
+            // Special handling for Arc: if the tracked app seems to be Arc, and the front app is Arc
+            if (trackedApp.name.localizedCaseInsensitiveContains("Arc") || trackedApp.bundleIdentifier == "company.thebrowser.Browser"),
+               (frontApp.localizedName?.localizedCaseInsensitiveContains("Arc") == true || bundleId == "company.thebrowser.Browser") {
+                   return true
+            }
+            return false
+        }) {
             var trackedApp = appState.focusModes[activeModeIndex].apps[appIndex]
             
             // Increment usage
