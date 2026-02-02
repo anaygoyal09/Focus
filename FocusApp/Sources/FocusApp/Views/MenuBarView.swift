@@ -27,12 +27,20 @@ struct MenuBarView: View {
                let mode = appState.focusModes.first(where: { $0.id == activeId }) {
                 
                 VStack(spacing: 0) {
-                    // Mode name badge
+                    // Mode name badge and Stop button
                     HStack {
                         Label(mode.name, systemImage: "target")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundColor(.secondary)
+                        
                         Spacer()
+                        
+                        Button("Stop") {
+                            appState.activeModeId = nil
+                            appState.saveData()
+                        }
+                        .buttonStyle(.bordered)
+                        .controlSize(.mini)
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, 12)
@@ -55,9 +63,19 @@ struct MenuBarView: View {
                         .font(.system(size: 12))
                         .foregroundColor(.secondary)
                     
-                    Text("Open settings to start a session")
-                        .font(.system(size: 11))
-                        .foregroundStyle(.tertiary)
+                    if let firstMode = appState.focusModes.first {
+                        Button("Start \(firstMode.name)") {
+                            appState.activeModeId = firstMode.id
+                            appState.saveData()
+                        }
+                        .buttonStyle(.borderedProminent)
+                        .controlSize(.small)
+                        .padding(.top, 4)
+                    } else {
+                        Text("Open settings to start a session")
+                            .font(.system(size: 11))
+                            .foregroundStyle(.tertiary)
+                    }
                 }
                 .padding(.vertical, 24)
             }
