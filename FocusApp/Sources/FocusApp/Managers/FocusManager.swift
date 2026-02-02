@@ -10,7 +10,7 @@ class FocusManager: ObservableObject {
     private var workspace = NSWorkspace.shared
     private var cancellables = Set<AnyCancellable>()
     private var blockerWindow: NSWindow?
-    private let notificationDelegate = NotificationDelegate()
+    // Delegate moved to AppDelegate
     
     // Track last notification sent to avoid spamming
     private var lastNotificationTime: Date = Date.distantPast
@@ -19,22 +19,14 @@ class FocusManager: ObservableObject {
     
     init(appState: AppState) {
         self.appState = appState
-        setupNotifications()
+        // Delegate setup handled in AppDelegate
         startMonitoring()
     }
     
-    private func setupNotifications() {
+    // Legacy support kept for reference or re-request
+    func setupNotifications() {
         let center = UNUserNotificationCenter.current()
-        center.delegate = notificationDelegate
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            if granted {
-                print("Notification permission granted")
-            } else if let error = error {
-                print("Notification permission error: \(error)")
-            } else {
-                print("Notification permission denied")
-            }
-        }
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { _, _ in }
     }
     
     private func startMonitoring() {
@@ -167,20 +159,29 @@ class FocusManager: ObservableObject {
     }
     
     private func sendNotification(title: String, body: String) {
+        print("Attempting to send notification: \(title) - \(body)")
+        
+        // 1. Try NSUserNotifications (Older API, often more reliable for non-notarized apps)
+        let nsNotification = NSUserNotification()
+        nsNotification.title = title
+        nsNotification.informativeText = body
+        // Suppress warning: 'NSUserNotificationDefaultSoundName' was deprecated in macOS 11.0
+        nsNotification.soundName = NSUserNotificationDefaultSoundName
+        NSUserNotificationCenter.default.deliver(nsNotification)
+        
+        // 2. Try UNUserNotificationCenter (Newer API)
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
         content.sound = .default
-        // Critical for notifications to show when app is focused (handled by delegate, but good practice)
         content.interruptionLevel = .active 
         
-        // Using a tiny delay often helps with reliability compared to nil trigger
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-        
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("Error scheduling notification: \(error)")
+                print("UNNotification error: \(error)")
+            } else {
+                print("UNNotification scheduled successfully")
             }
         }
     }
@@ -191,11 +192,6 @@ class FocusManager: ObservableObject {
         let center = UNUserNotificationCenter.current()
         center.getNotificationSettings { settings in
             print("Notification settings: \(settings)")
-            if settings.authorizationStatus != .authorized {
-                print("Notifications not authorized!")
-                // Try requesting again
-                self.setupNotifications()
-            }
         }
         sendNotification(title: "Focus Test", body: "This is a test notification from Focus.")
     }
@@ -222,17 +218,5 @@ class FocusManager: ObservableObject {
         // Close window
         blockerWindow?.close()
         blockerWindow = nil
-    }
-}
-
-// Notification delegate to show notifications even when app is in foreground
-class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        // Show notification even when app is in foreground
-        completionHandler([.banner, .sound, .badge])
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        completionHandler()
     }
 }
