@@ -61,18 +61,25 @@ struct SettingsView: View {
                 
                 Divider()
                 
+                // Test notification button - bottom left
                 Button(action: {
                     focusManager.sendTestNotification()
                 }) {
-                    HStack {
-                        Image(systemName: "bell.badge")
+                    HStack(spacing: 6) {
+                        Image(systemName: "bell.badge.fill")
+                            .foregroundColor(.orange)
                         Text("Test Notification")
+                            .fontWeight(.medium)
                     }
                     .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
+                    .padding(.vertical, 10)
+                    .background(Color.orange.opacity(0.1))
+                    .cornerRadius(8)
                 }
-                .buttonStyle(.borderless)
-                .padding(.vertical, 4)
+                .buttonStyle(.plain)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 8)
+                .help("Send a test notification to verify they are working")
             }
             .frame(minWidth: 200)
             .background(Color(NSColor.controlBackgroundColor))

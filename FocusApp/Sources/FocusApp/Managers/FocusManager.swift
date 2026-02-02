@@ -151,38 +151,70 @@ class FocusManager: ObservableObject {
     }
     
     private func sendNotification(title: String, body: String) {
+        print("[Notification] Sending: \(title) - \(body)")
+        
+        // Method 1: Modern UNUserNotificationCenter
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
         content.sound = .default
-        // Critical for notifications to show when app is focused (handled by delegate, but good practice)
-        content.interruptionLevel = .active 
+        content.interruptionLevel = .active
         
-        // Using a tiny delay often helps with reliability compared to nil trigger
         let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-        
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("Error scheduling notification: \(error)")
+                print("[Notification] UNUserNotification error: \(error)")
+            } else {
+                print("[Notification] UNUserNotification scheduled successfully")
             }
+        }
+        
+        // Method 2: Legacy NSUserNotification (deprecated but reliable for non-sandboxed apps)
+        DispatchQueue.main.async {
+            let legacyNotification = NSUserNotification()
+            legacyNotification.title = title
+            legacyNotification.informativeText = body
+            legacyNotification.soundName = NSUserNotificationDefaultSoundName
+            NSUserNotificationCenter.default.deliver(legacyNotification)
+            print("[Notification] NSUserNotification delivered")
         }
     }
     
     // For testing/debugging
     func sendTestNotification() {
-        print("Sending test notification...")
+        print("[Test] Sending test notification...")
+        
+        // Check and request permission
         let center = UNUserNotificationCenter.current()
-        center.getNotificationSettings { settings in
-            print("Notification settings: authorizationStatus=\(settings.authorizationStatus.rawValue)")
-            if settings.authorizationStatus != .authorized {
-                print("Notifications not authorized - requesting permission...")
-                center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
-                    print("Permission request result: \(granted)")
+        center.getNotificationSettings { [weak self] settings in
+            print("[Test] Authorization status: \(settings.authorizationStatus.rawValue)")
+            
+            if settings.authorizationStatus == .notDetermined {
+                center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                    print("[Test] Permission granted: \(granted)")
+                    if granted {
+                        self?.sendNotification(title: "Focus Test", body: "Notifications are working! 🎉")
+                    }
                 }
+            } else {
+                self?.sendNotification(title: "Focus Test", body: "Notifications are working! 🎉")
             }
         }
-        sendNotification(title: "Focus Test", body: "This is a test notification from Focus.")
+        
+        // Also show an in-app alert as immediate feedback
+        DispatchQueue.main.async {
+            self.showInAppNotification(title: "Focus Test", body: "Check your notification center!")
+        }
+    }
+    
+    private func showInAppNotification(title: String, body: String) {
+        let alert = NSAlert()
+        alert.messageText = title
+        alert.informativeText = body
+        alert.alertStyle = .informational
+        alert.addButton(withTitle: "OK")
+        alert.runModal()
     }
     
     func extendTime(minutes: Double) {
