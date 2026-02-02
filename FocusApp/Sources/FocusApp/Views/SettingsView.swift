@@ -1,81 +1,86 @@
 import SwiftUI
+import UserNotifications
 
 struct SettingsView: View {
     @EnvironmentObject var appState: AppState
     @EnvironmentObject var focusManager: FocusManager
     @State private var selectedModeId: UUID?
+    @State private var showNotificationFallback = false
+    @State private var notificationAuthorized = true
     
     var body: some View {
-        NavigationSplitView {
-            // Sidebar
-            VStack(spacing: 0) {
-                // Header
-                HStack {
-                    Text("Focus Modes")
-                        .font(.system(size: 11, weight: .semibold))
-                        .foregroundColor(.secondary)
-                        .textCase(.uppercase)
-                        .tracking(0.5)
-                    
-                    Spacer()
-                    
-                    Button(action: addNewMode) {
-                        Image(systemName: "plus.circle.fill")
-                            .font(.system(size: 16))
-                            .foregroundColor(.accentColor)
+        ZStack {
+            NavigationSplitView {
+                // Sidebar
+                VStack(spacing: 0) {
+                    // Header
+                    HStack {
+                        Text("Focus Modes")
+                            .font(.system(size: 11, weight: .semibold))
+                            .foregroundColor(.secondary)
+                            .textCase(.uppercase)
+                            .tracking(0.5)
+                        
+                        Spacer()
+                        
+                        Button(action: addNewMode) {
+                            Image(systemName: "plus.circle.fill")
+                                .font(.system(size: 16))
+                                .foregroundColor(.accentColor)
+                        }
+                        .buttonStyle(.plain)
+                        .help("Add new focus mode")
                     }
-                    .buttonStyle(.plain)
-                    .help("Add new focus mode")
-                }
-                .padding(.horizontal, 16)
-                .padding(.vertical, 12)
-                
-                Divider()
-                
-                // Mode List
-                ScrollView {
-                    LazyVStack(spacing: 4) {
-                        ForEach(appState.focusModes) { mode in
-                            ModeRowView(
-                                mode: mode,
-                                isSelected: selectedModeId == mode.id,
-                                isActive: appState.activeModeId == mode.id
-                            )
-                            .onTapGesture {
-                                withAnimation(.easeInOut(duration: 0.15)) {
-                                    selectedModeId = mode.id
+                    .padding(.horizontal, 16)
+                    .padding(.vertical, 12)
+                    
+                    Divider()
+                    
+                    // Mode List
+                    ScrollView {
+                        LazyVStack(spacing: 4) {
+                            ForEach(appState.focusModes) { mode in
+                                ModeRowView(
+                                    mode: mode,
+                                    isSelected: selectedModeId == mode.id,
+                                    isActive: appState.activeModeId == mode.id
+                                )
+                                .onTapGesture {
+                                    withAnimation(.easeInOut(duration: 0.15)) {
+                                        selectedModeId = mode.id
+                                    }
                                 }
-                            }
-                            .contextMenu {
-                                Button(role: .destructive) {
-                                    deleteMode(mode)
-                                } label: {
-                                    Label("Delete", systemImage: "trash")
+                                .contextMenu {
+                                    Button(role: .destructive) {
+                                        deleteMode(mode)
+                                    } label: {
+                                        Label("Delete", systemImage: "trash")
+                                    }
                                 }
                             }
                         }
+                        .padding(.horizontal, 8)
+                        .padding(.vertical, 8)
                     }
-                    .padding(.horizontal, 8)
-                    .padding(.vertical, 8)
                 }
-            }
-            .frame(minWidth: 200)
-            .background(Color(NSColor.controlBackgroundColor))
-            
-        } detail: {
-            // Detail View
-            if let modeId = selectedModeId,
-               let modeIndex = appState.focusModes.firstIndex(where: { $0.id == modeId }) {
-                FocusModeDetailView(mode: $appState.focusModes[modeIndex])
-                    .environmentObject(appState)
-            } else {
-                EmptyDetailView()
+                .frame(minWidth: 200)
+                .background(Color(NSColor.controlBackgroundColor))
+                
+            } detail: {
+                // Detail View
+                if let modeId = selectedModeId,
+                   let modeIndex = appState.focusModes.firstIndex(where: { $0.id == modeId }) {
+                    FocusModeDetailView(mode: $appState.focusModes[modeIndex])
+                        .environmentObject(appState)
+                } else {
+                    EmptyDetailView()
+                }
             }
         }
         .frame(minWidth: 700, minHeight: 500)
         .overlay(alignment: .bottomLeading) {
             Button(action: {
-                focusManager.sendTestNotification()
+                triggerTestNotification()
             }) {
                 HStack(spacing: 6) {
                     Image(systemName: "bell.fill")
@@ -93,9 +98,41 @@ struct SettingsView: View {
             .padding(.leading, 14)
             .padding(.bottom, 12)
         }
+        .overlay(alignment: .top) {
+            if showNotificationFallback {
+                NotificationFallbackPopup(isAuthorized: notificationAuthorized) {
+                    withAnimation(.easeOut(duration: 0.2)) {
+                        showNotificationFallback = false
+                    }
+                }
+                .padding(.top, 8)
+                .transition(.move(edge: .top).combined(with: .opacity))
+            }
+        }
         .onAppear {
             if selectedModeId == nil, let first = appState.focusModes.first {
                 selectedModeId = first.id
+            }
+        }
+    }
+
+    private func triggerTestNotification() {
+        focusManager.sendTestNotification()
+        updateNotificationStatusAndMaybeShowPopup()
+    }
+
+    private func updateNotificationStatusAndMaybeShowPopup() {
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
+            let status = settings.authorizationStatus
+            let authorized = (status == .authorized) || (status == .provisional)
+            DispatchQueue.main.async {
+                self.notificationAuthorized = authorized
+                if !authorized {
+                    withAnimation(.spring(response: 0.35, dampingFraction: 0.8)) {
+                        self.showNotificationFallback = true
+                    }
+                }
             }
         }
     }
@@ -170,6 +207,56 @@ struct ModeRowView: View {
                 .stroke(isSelected ? Color.accentColor.opacity(0.3) : Color.clear, lineWidth: 1)
         )
         .contentShape(Rectangle())
+    }
+}
+
+struct NotificationFallbackPopup: View {
+    let isAuthorized: Bool
+    let onDismiss: () -> Void
+
+    var body: some View {
+        HStack(spacing: 10) {
+            Image(systemName: isAuthorized ? "checkmark.seal.fill" : "exclamationmark.triangle.fill")
+                .foregroundColor(isAuthorized ? .green : .orange)
+                .font(.system(size: 14, weight: .semibold))
+
+            VStack(alignment: .leading, spacing: 2) {
+                Text(isAuthorized ? "Notification test sent" : "Notifications are off")
+                    .font(.system(size: 12, weight: .semibold))
+                Text(isAuthorized ? "You should see a banner shortly." : "Enable in System Settings → Notifications → Focus.")
+                    .font(.system(size: 10))
+                    .foregroundColor(.secondary)
+            }
+
+            Spacer(minLength: 8)
+
+            Button(action: onDismiss) {
+                Image(systemName: "xmark")
+                    .font(.system(size: 10, weight: .bold))
+                    .foregroundColor(.secondary)
+                    .padding(6)
+            }
+            .buttonStyle(.plain)
+        }
+        .padding(.horizontal, 14)
+        .padding(.vertical, 10)
+        .background(
+            ZStack {
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(Color.white.opacity(0.08))
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .stroke(Color.white.opacity(0.18), lineWidth: 1)
+                RoundedRectangle(cornerRadius: 14, style: .continuous)
+                    .fill(.ultraThinMaterial)
+            }
+        )
+        .overlay(
+            RoundedRectangle(cornerRadius: 14, style: .continuous)
+                .stroke(Color.white.opacity(0.25), lineWidth: 0.5)
+        )
+        .shadow(color: Color.black.opacity(0.2), radius: 12, x: 0, y: 6)
+        .padding(.horizontal, 16)
+        .frame(maxWidth: 520)
     }
 }
 
