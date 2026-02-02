@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MenuBarView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var focusManager: FocusManager
     @Environment(\.openWindow) var openWindow
     
     var body: some View {
@@ -96,6 +97,24 @@ struct MenuBarView: View {
                 }
             }
             .padding(.vertical, 6)
+            
+            // Debug / Test Footer
+            HStack {
+                Button(action: { focusManager.sendTestNotification() }) {
+                    Image(systemName: "bell.badge.fill")
+                        .font(.system(size: 10))
+                        .foregroundColor(.secondary)
+                    Text("Test")
+                        .font(.system(size: 10))
+                        .foregroundColor(.secondary)
+                }
+                .buttonStyle(.plain)
+                .help("Send a test notification immediately")
+                
+                Spacer()
+            }
+            .padding(.horizontal, 16)
+            .padding(.bottom, 8)
         }
         .frame(width: 280)
         .background(VisualEffectBackground())

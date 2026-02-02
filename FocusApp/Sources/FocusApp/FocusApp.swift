@@ -39,6 +39,7 @@ struct FocusApp: App {
         MenuBarExtra(content: {
             MenuBarView()
                 .environmentObject(appState)
+                .environmentObject(focusManager) // Inject FocusManager
         }, label: {
             let icon = appState.activeModeId != nil ? (appState.menuBarIcon.isEmpty ? "timer" : appState.menuBarIcon) : "pawprint.fill"
             Image(systemName: icon)
