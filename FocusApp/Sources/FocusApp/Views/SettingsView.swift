@@ -58,27 +58,6 @@ struct SettingsView: View {
                     .padding(.horizontal, 8)
                     .padding(.vertical, 8)
                 }
-                
-                Divider()
-                
-                Button(action: {
-                    focusManager.sendTestNotification()
-                }) {
-                    HStack {
-                        Image(systemName: "bell.fill")
-                            .foregroundColor(.accentColor)
-                        Text("Test Notification")
-                            .fontWeight(.medium)
-                    }
-                    .frame(maxWidth: .infinity)
-                    .padding(.vertical, 8)
-                }
-                .buttonStyle(.borderless)
-                .background(Color.accentColor.opacity(0.1))
-                .cornerRadius(8)
-                .padding(.horizontal, 8)
-                .padding(.vertical, 8)
-                .help("Click to check if notifications are working")
             }
             .frame(minWidth: 200)
             .background(Color(NSColor.controlBackgroundColor))
@@ -94,6 +73,26 @@ struct SettingsView: View {
             }
         }
         .frame(minWidth: 700, minHeight: 500)
+        .overlay(alignment: .bottomLeading) {
+            Button(action: {
+                focusManager.sendTestNotification()
+            }) {
+                HStack(spacing: 6) {
+                    Image(systemName: "bell.fill")
+                    Text("Test Notification")
+                        .fontWeight(.medium)
+                }
+                .font(.system(size: 11))
+                .padding(.horizontal, 10)
+                .padding(.vertical, 6)
+                .background(Color.accentColor.opacity(0.12))
+                .cornerRadius(8)
+            }
+            .buttonStyle(.plain)
+            .help("Send a test notification")
+            .padding(.leading, 14)
+            .padding(.bottom, 12)
+        }
         .onAppear {
             if selectedModeId == nil, let first = appState.focusModes.first {
                 selectedModeId = first.id

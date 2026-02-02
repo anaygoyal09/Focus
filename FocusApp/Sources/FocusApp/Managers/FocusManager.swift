@@ -201,47 +201,61 @@ class FocusManager: ObservableObject {
     
     private func sendNotification(title: String, body: String) {
         print("Sending Notification: \(title)")
-        
-        // 1. Try NSUserNotifications (Deprecated but reliable locally)
-        let nsNotification = NSUserNotification()
-        nsNotification.title = title
-        nsNotification.informativeText = body
-        nsNotification.soundName = NSUserNotificationDefaultSoundName
-        NSUserNotificationCenter.default.deliver(nsNotification)
-        
-        // 2. Try UNUserNotificationCenter
+
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
+            switch settings.authorizationStatus {
+            case .authorized, .provisional, .ephemeral:
+                self.scheduleUNNotification(title: title, body: body)
+            case .notDetermined:
+                center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+                    if granted {
+                        self.scheduleUNNotification(title: title, body: body)
+                    } else {
+                        self.deliverLegacyNotification(title: title, body: body)
+                    }
+                }
+            case .denied:
+                self.deliverLegacyNotification(title: title, body: body)
+            @unknown default:
+                self.deliverLegacyNotification(title: title, body: body)
+            }
+        }
+    }
+
+    private func scheduleUNNotification(title: String, body: String) {
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
         content.sound = UNNotificationSound.default
         // .timeSensitive requires entitlement, .active is standard for now
-        content.interruptionLevel = .active 
-        
-        // Trigger immediately (nil triggers delivery now)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-        
+        content.interruptionLevel = .active
+
+        // Use a very short trigger to improve delivery reliability in menu bar apps
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 1, repeats: false)
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
                 print("UNNotification Error: \(error.localizedDescription)")
+            } else {
+                print("UNNotification scheduled")
             }
         }
+    }
+
+    private func deliverLegacyNotification(title: String, body: String) {
+        // Fallback for denied permission or older system behavior
+        let nsNotification = NSUserNotification()
+        nsNotification.title = title
+        nsNotification.informativeText = body
+        nsNotification.soundName = NSUserNotificationDefaultSoundName
+        NSUserNotificationCenter.default.deliver(nsNotification)
     }
     
     // For testing/debugging
     func sendTestNotification() {
         print("Sending test notification manually...")
-        let center = UNUserNotificationCenter.current()
-        
-        center.getNotificationSettings { settings in
-            print("Current Notification Settings: authorizationStatus=\(settings.authorizationStatus.rawValue)")
-            if settings.authorizationStatus != .authorized {
-                // Try requesting again
-                center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-                     print("Re-requested permission: \(granted)")
-                }
-            }
-        }
-        
         sendNotification(title: "Focus Test", body: "This is a test notification from Focus. If you see this, notifications are working!")
     }
     
