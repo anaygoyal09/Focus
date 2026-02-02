@@ -5,3 +5,4 @@
 *.xcworkspace
 build/
 DerivedData/
+FocusApp/Focus.app/Contents/MacOS/FocusApp
