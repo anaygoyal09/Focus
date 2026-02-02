@@ -2,6 +2,7 @@ import SwiftUI
 
 struct SettingsView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var focusManager: FocusManager
     @State private var selectedModeId: UUID?
     
     var body: some View {
@@ -57,6 +58,21 @@ struct SettingsView: View {
                     .padding(.horizontal, 8)
                     .padding(.vertical, 8)
                 }
+                
+                Divider()
+                
+                Button(action: {
+                    focusManager.sendTestNotification()
+                }) {
+                    HStack {
+                        Image(systemName: "bell.badge")
+                        Text("Test Notification")
+                    }
+                    .frame(maxWidth: .infinity)
+                    .padding(.vertical, 8)
+                }
+                .buttonStyle(.borderless)
+                .padding(.vertical, 4)
             }
             .frame(minWidth: 200)
             .background(Color(NSColor.controlBackgroundColor))

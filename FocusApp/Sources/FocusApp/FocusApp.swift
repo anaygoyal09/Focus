@@ -27,6 +27,7 @@ struct FocusApp: App {
         Window("Focus Settings", id: "settings") {
             SettingsView()
                 .environmentObject(appState)
+                .environmentObject(focusManager)
                 .onAppear {
                     // Show in Dock when Settings opens
                     NSApp.setActivationPolicy(.regular)

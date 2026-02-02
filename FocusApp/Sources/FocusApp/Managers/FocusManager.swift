@@ -171,9 +171,33 @@ class FocusManager: ObservableObject {
         content.title = title
         content.body = body
         content.sound = .default
+        // Critical for notifications to show when app is focused (handled by delegate, but good practice)
+        content.interruptionLevel = .active 
         
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
-        UNUserNotificationCenter.current().add(request)
+        // Using a tiny delay often helps with reliability compared to nil trigger
+        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
+        
+        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
+        UNUserNotificationCenter.current().add(request) { error in
+            if let error = error {
+                print("Error scheduling notification: \(error)")
+            }
+        }
+    }
+    
+    // For testing/debugging
+    func sendTestNotification() {
+        print("Sending test notification...")
+        let center = UNUserNotificationCenter.current()
+        center.getNotificationSettings { settings in
+            print("Notification settings: \(settings)")
+            if settings.authorizationStatus != .authorized {
+                print("Notifications not authorized!")
+                // Try requesting again
+                self.setupNotifications()
+            }
+        }
+        sendNotification(title: "Focus Test", body: "This is a test notification from Focus.")
     }
     
     func extendTime(minutes: Double) {
