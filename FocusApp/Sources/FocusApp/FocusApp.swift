@@ -36,10 +36,17 @@ struct FocusApp: App {
     
     var body: some Scene {
         // Menu Bar
-        MenuBarExtra("Focus", systemImage: "pawprint.fill") {
+        MenuBarExtra(content: {
             MenuBarView()
                 .environmentObject(appState)
-        }
+        }, label: {
+            let icon = appState.activeModeId != nil ? (appState.menuBarIcon.isEmpty ? "timer" : appState.menuBarIcon) : "pawprint.fill"
+            Image(systemName: icon)
+            if !appState.menuBarText.isEmpty {
+                Text(appState.menuBarText)
+                    .monospacedDigit()
+            }
+        })
         .menuBarExtraStyle(.window) // Uses the MenuBarView as a popover
         
         // Settings Window

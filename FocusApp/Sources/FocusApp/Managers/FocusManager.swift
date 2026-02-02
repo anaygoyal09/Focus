@@ -33,6 +33,36 @@ class FocusManager: ObservableObject {
         // Run loop every 1 second
         timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
             self?.checkCurrentActivity()
+            self?.updateMenuBar()
+        }
+    }
+
+    private func updateMenuBar() {
+        guard let activeMode = appState.focusModes.first(where: { $0.id == appState.activeModeId }) else {
+            DispatchQueue.main.async {
+                if self.appState.menuBarText != "" { self.appState.menuBarText = "" }
+                if self.appState.menuBarIcon != "pawprint.fill" { self.appState.menuBarIcon = "pawprint.fill" }
+            }
+            return
+        }
+
+        // Look for Arc specifically as requested
+        if let arcApp = activeMode.apps.first(where: { $0.name.localizedCaseInsensitiveContains("Arc") || $0.bundleIdentifier == "company.thebrowser.Browser" }) {
+             let remaining = Int(arcApp.timeRemaining)
+             let minutes = remaining / 60
+             let seconds = remaining % 60
+             
+             let newText = String(format: "Arc: %d:%02d", minutes, seconds)
+             DispatchQueue.main.async {
+                 if self.appState.menuBarText != newText { self.appState.menuBarText = newText }
+                 self.appState.menuBarIcon = "timer"
+             }
+        } else {
+             // Fallback if Arc is not tracked but we are active
+             DispatchQueue.main.async {
+                 self.appState.menuBarText = ""
+                 self.appState.menuBarIcon = "target"
+             }
         }
     }
     
