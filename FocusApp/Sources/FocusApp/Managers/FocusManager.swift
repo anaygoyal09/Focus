@@ -168,15 +168,15 @@ class FocusManager: ObservableObject {
     
     private func checkAndSendNotification(remaining: TimeInterval, appName: String) {
         for threshold in appState.warningThresholds {
-            // Check if we're at this threshold (within 1 second)
-            if abs(remaining - threshold) < 1.5 {
+            // Robust check: Trigger if we are below the threshold but within a reasonable window (e.g. passed it in last 5 seconds)
+            // This prevents missing it due to timer lag, but prevents spamming "30m remaining" when only 5m are left.
+            if remaining <= (threshold + 0.5) && remaining > (threshold - 5.0) {
                 // Check if we already notified for this threshold for this app
-                let key = "\(appName)_\(Int(threshold))"
                 if notifiedThresholds[appName]?.contains(threshold) == true {
-                    return
+                    continue
                 }
                 
-                // Mark as notified
+                // Mark as notified immediately
                 if notifiedThresholds[appName] == nil {
                     notifiedThresholds[appName] = []
                 }
@@ -192,47 +192,57 @@ class FocusManager: ObservableObject {
                 
                 let urgency = threshold <= 60 ? "⚠️ " : ""
                 sendNotification(title: "\(urgency)Time Alert", body: message)
+                
+                // We found the relevant threshold for this moment, break to avoid double notifications (though range check prevents most)
                 break
             }
         }
     }
     
     private func sendNotification(title: String, body: String) {
-        print("Attempting to send notification: \(title) - \(body)")
+        print("Sending Notification: \(title)")
         
-        // 1. Try NSUserNotifications (Older API, often more reliable for non-notarized apps)
+        // 1. Try NSUserNotifications (Deprecated but reliable locally)
         let nsNotification = NSUserNotification()
         nsNotification.title = title
         nsNotification.informativeText = body
-        // Suppress warning: 'NSUserNotificationDefaultSoundName' was deprecated in macOS 11.0
         nsNotification.soundName = NSUserNotificationDefaultSoundName
         NSUserNotificationCenter.default.deliver(nsNotification)
         
-        // 2. Try UNUserNotificationCenter (Newer API)
+        // 2. Try UNUserNotificationCenter
         let content = UNMutableNotificationContent()
         content.title = title
         content.body = body
-        content.sound = .default
+        content.sound = UNNotificationSound.default
+        // .timeSensitive requires entitlement, .active is standard for now
         content.interruptionLevel = .active 
         
+        // Trigger immediately (nil triggers delivery now)
         let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: nil)
+        
         UNUserNotificationCenter.current().add(request) { error in
             if let error = error {
-                print("UNNotification error: \(error)")
-            } else {
-                print("UNNotification scheduled successfully")
+                print("UNNotification Error: \(error.localizedDescription)")
             }
         }
     }
     
     // For testing/debugging
     func sendTestNotification() {
-        print("Sending test notification...")
+        print("Sending test notification manually...")
         let center = UNUserNotificationCenter.current()
+        
         center.getNotificationSettings { settings in
-            print("Notification settings: \(settings)")
+            print("Current Notification Settings: authorizationStatus=\(settings.authorizationStatus.rawValue)")
+            if settings.authorizationStatus != .authorized {
+                // Try requesting again
+                center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+                     print("Re-requested permission: \(granted)")
+                }
+            }
         }
-        sendNotification(title: "Focus Test", body: "This is a test notification from Focus.")
+        
+        sendNotification(title: "Focus Test", body: "This is a test notification from Focus. If you see this, notifications are working!")
     }
     
     func extendTime(minutes: Double) {

@@ -65,14 +65,20 @@ struct SettingsView: View {
                     focusManager.sendTestNotification()
                 }) {
                     HStack {
-                        Image(systemName: "bell.badge")
+                        Image(systemName: "bell.fill")
+                            .foregroundColor(.accentColor)
                         Text("Test Notification")
+                            .fontWeight(.medium)
                     }
                     .frame(maxWidth: .infinity)
                     .padding(.vertical, 8)
                 }
                 .buttonStyle(.borderless)
-                .padding(.vertical, 4)
+                .background(Color.accentColor.opacity(0.1))
+                .cornerRadius(8)
+                .padding(.horizontal, 8)
+                .padding(.vertical, 8)
+                .help("Click to check if notifications are working")
             }
             .frame(minWidth: 200)
             .background(Color(NSColor.controlBackgroundColor))
