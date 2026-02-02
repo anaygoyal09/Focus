@@ -29,6 +29,9 @@ class FocusManager: ObservableObject {
     }
     
     private func checkCurrentActivity() {
+        // Check for daily reset (in case app runs past midnight)
+        appState.checkDailyReset()
+        
         guard let activeModeIndex = appState.focusModes.firstIndex(where: { $0.id == appState.activeModeId }) else {
             // No active mode, nothing to track
             return
@@ -153,35 +156,16 @@ class FocusManager: ObservableObject {
     private func sendNotification(title: String, body: String) {
         print("[Notification] Sending: \(title) - \(body)")
         
-        // Method 1: AppleScript - MOST RELIABLE for non-sandboxed apps
-        DispatchQueue.global(qos: .userInitiated).async {
-            let script = """
-            display notification "\(body)" with title "\(title)" sound name "default"
-            """
-            if let appleScript = NSAppleScript(source: script) {
-                var error: NSDictionary?
-                appleScript.executeAndReturnError(&error)
-                if let error = error {
-                    print("[Notification] AppleScript error: \(error)")
-                } else {
-                    print("[Notification] AppleScript notification sent successfully")
-                }
-            }
-        }
-        
-        // Method 2: Modern UNUserNotificationCenter (backup)
-        let content = UNMutableNotificationContent()
-        content.title = title
-        content.body = body
-        content.sound = .default
-        content.interruptionLevel = .active
-        
-        let trigger = UNTimeIntervalNotificationTrigger(timeInterval: 0.1, repeats: false)
-        let request = UNNotificationRequest(identifier: UUID().uuidString, content: content, trigger: trigger)
-        UNUserNotificationCenter.current().add(request) { error in
-            if let error = error {
-                print("[Notification] UNUserNotification error: \(error)")
-            }
+        // Use NSUserNotification - works for unsigned apps, no authorization needed
+        DispatchQueue.main.async {
+            let notification = NSUserNotification()
+            notification.title = title
+            notification.informativeText = body
+            notification.soundName = NSUserNotificationDefaultSoundName
+            notification.hasActionButton = false
+            
+            NSUserNotificationCenter.default.deliver(notification)
+            print("[Notification] NSUserNotification delivered")
         }
     }
     
@@ -189,26 +173,18 @@ class FocusManager: ObservableObject {
     func sendTestNotification() {
         print("[Test] Sending test notification...")
         
-        // Check and request permission
-        let center = UNUserNotificationCenter.current()
-        center.getNotificationSettings { [weak self] settings in
-            print("[Test] Authorization status: \(settings.authorizationStatus.rawValue)")
+        // Use NSUserNotification directly - no authorization needed
+        DispatchQueue.main.async { [weak self] in
+            let notification = NSUserNotification()
+            notification.title = "Focus Test"
+            notification.informativeText = "Notifications are working! 🎉"
+            notification.soundName = NSUserNotificationDefaultSoundName
             
-            if settings.authorizationStatus == .notDetermined {
-                center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-                    print("[Test] Permission granted: \(granted)")
-                    if granted {
-                        self?.sendNotification(title: "Focus Test", body: "Notifications are working! 🎉")
-                    }
-                }
-            } else {
-                self?.sendNotification(title: "Focus Test", body: "Notifications are working! 🎉")
-            }
-        }
-        
-        // Also show an in-app alert as immediate feedback
-        DispatchQueue.main.async {
-            self.showInAppNotification(title: "Focus Test", body: "Check your notification center!")
+            NSUserNotificationCenter.default.deliver(notification)
+            print("[Test] Notification delivered via NSUserNotificationCenter")
+            
+            // Also show in-app alert as confirmation
+            self?.showInAppNotification(title: "Focus Test", body: "Notification sent! Check your screen.")
         }
     }
     

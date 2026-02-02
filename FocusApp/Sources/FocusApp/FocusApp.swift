@@ -1,29 +1,15 @@
 import SwiftUI
 import AppKit
-import UserNotifications
 
-class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSUserNotificationCenterDelegate {
     func applicationDidFinishLaunching(_ notification: Notification) {
-        // Set up notification delegate EARLY - this is critical
-        let center = UNUserNotificationCenter.current()
-        center.delegate = self
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            DispatchQueue.main.async {
-                print("Notification permission granted: \(granted)")
-                if let error = error {
-                    print("Notification error: \(error)")
-                }
-            }
-        }
+        // Set ourselves as the notification center delegate so notifications show when app is active
+        NSUserNotificationCenter.default.delegate = self
     }
     
-    // Show notifications even when app is in foreground - REQUIRED for menu bar apps
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        completionHandler([.banner, .sound, .badge])
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        completionHandler()
+    // REQUIRED: This makes notifications show even when the app is in foreground
+    func userNotificationCenter(_ center: NSUserNotificationCenter, shouldPresent notification: NSUserNotification) -> Bool {
+        return true  // Always show notifications
     }
 }
 
