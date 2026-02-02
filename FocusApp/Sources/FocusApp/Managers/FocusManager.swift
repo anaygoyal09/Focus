@@ -10,7 +10,6 @@ class FocusManager: ObservableObject {
     private var workspace = NSWorkspace.shared
     private var cancellables = Set<AnyCancellable>()
     private var blockerWindow: NSWindow?
-    private let notificationDelegate = NotificationDelegate()
     
     // Track last notification sent to avoid spamming
     private var lastNotificationTime: Date = Date.distantPast
@@ -19,22 +18,7 @@ class FocusManager: ObservableObject {
     
     init(appState: AppState) {
         self.appState = appState
-        setupNotifications()
         startMonitoring()
-    }
-    
-    private func setupNotifications() {
-        let center = UNUserNotificationCenter.current()
-        center.delegate = notificationDelegate
-        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
-            if granted {
-                print("Notification permission granted")
-            } else if let error = error {
-                print("Notification permission error: \(error)")
-            } else {
-                print("Notification permission denied")
-            }
-        }
     }
     
     private func startMonitoring() {
@@ -190,11 +174,12 @@ class FocusManager: ObservableObject {
         print("Sending test notification...")
         let center = UNUserNotificationCenter.current()
         center.getNotificationSettings { settings in
-            print("Notification settings: \(settings)")
+            print("Notification settings: authorizationStatus=\(settings.authorizationStatus.rawValue)")
             if settings.authorizationStatus != .authorized {
-                print("Notifications not authorized!")
-                // Try requesting again
-                self.setupNotifications()
+                print("Notifications not authorized - requesting permission...")
+                center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, _ in
+                    print("Permission request result: \(granted)")
+                }
             }
         }
         sendNotification(title: "Focus Test", body: "This is a test notification from Focus.")
@@ -222,17 +207,5 @@ class FocusManager: ObservableObject {
         // Close window
         blockerWindow?.close()
         blockerWindow = nil
-    }
-}
-
-// Notification delegate to show notifications even when app is in foreground
-class NotificationDelegate: NSObject, UNUserNotificationCenterDelegate {
-    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
-        // Show notification even when app is in foreground
-        completionHandler([.banner, .sound, .badge])
-    }
-    
-    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
-        completionHandler()
     }
 }

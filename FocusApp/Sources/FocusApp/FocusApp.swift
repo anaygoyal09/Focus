@@ -1,8 +1,35 @@
 import SwiftUI
 import AppKit
+import UserNotifications
+
+class AppDelegate: NSObject, NSApplicationDelegate, UNUserNotificationCenterDelegate {
+    func applicationDidFinishLaunching(_ notification: Notification) {
+        // Set up notification delegate EARLY - this is critical
+        let center = UNUserNotificationCenter.current()
+        center.delegate = self
+        center.requestAuthorization(options: [.alert, .sound, .badge]) { granted, error in
+            DispatchQueue.main.async {
+                print("Notification permission granted: \(granted)")
+                if let error = error {
+                    print("Notification error: \(error)")
+                }
+            }
+        }
+    }
+    
+    // Show notifications even when app is in foreground - REQUIRED for menu bar apps
+    func userNotificationCenter(_ center: UNUserNotificationCenter, willPresent notification: UNNotification, withCompletionHandler completionHandler: @escaping (UNNotificationPresentationOptions) -> Void) {
+        completionHandler([.banner, .sound, .badge])
+    }
+    
+    func userNotificationCenter(_ center: UNUserNotificationCenter, didReceive response: UNNotificationResponse, withCompletionHandler completionHandler: @escaping () -> Void) {
+        completionHandler()
+    }
+}
 
 @main
 struct FocusApp: App {
+    @NSApplicationDelegateAdaptor(AppDelegate.self) var appDelegate
     @StateObject var appState = AppState()
     @StateObject var focusManager: FocusManager
     
