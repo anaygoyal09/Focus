@@ -47,6 +47,7 @@ struct FocusApp: App {
         MenuBarExtra("Focus", systemImage: "timer") {
             MenuBarView()
                 .environmentObject(appState)
+                .environmentObject(focusManager)
         }
         .menuBarExtraStyle(.window) // Uses the MenuBarView as a popover
         

@@ -2,6 +2,7 @@ import SwiftUI
 
 struct MenuBarView: View {
     @EnvironmentObject var appState: AppState
+    @EnvironmentObject var focusManager: FocusManager
     @Environment(\.openWindow) var openWindow
     
     var body: some View {
@@ -67,6 +68,29 @@ struct MenuBarView: View {
             
             // Actions
             VStack(spacing: 2) {
+                // Test Notification Button - prominent orange
+                Button(action: {
+                    focusManager.sendTestNotification()
+                }) {
+                    HStack {
+                        Image(systemName: "bell.badge.fill")
+                            .font(.system(size: 12))
+                            .foregroundColor(.orange)
+                            .frame(width: 16)
+                        
+                        Text("Test Notification")
+                            .font(.system(size: 13))
+                        
+                        Spacer()
+                    }
+                    .padding(.horizontal, 12)
+                    .padding(.vertical, 8)
+                    .background(Color.orange.opacity(0.1))
+                    .cornerRadius(6)
+                }
+                .buttonStyle(.plain)
+                .padding(.horizontal, 6)
+                
                 MenuButton(title: "Settings", icon: "gearshape", shortcut: "⌘,") {
                     openWindow(id: "settings")
                     NSApp.activate(ignoringOtherApps: true)
