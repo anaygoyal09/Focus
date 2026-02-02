@@ -33,7 +33,13 @@
 
 ### Download
 
-Download the latest `Focus.dmg` from the [Releases](https://github.com/anaygoyal/Focus/releases) page, then:
+<p align="center">
+  <strong>
+    <a href="https://github.com/anaygoyal/Focus/raw/main/dist/Focus.dmg" download>
+      ⬇️ Download Focus.dmg
+    </a>
+  </strong>
+</p>
 
 2. Open the DMG file
 3. Drag the **Focus** app to your **Applications** folder
