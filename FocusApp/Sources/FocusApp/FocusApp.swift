@@ -36,7 +36,7 @@ struct FocusApp: App {
     
     var body: some Scene {
         // Menu Bar
-        MenuBarExtra("Focus", systemImage: "timer") {
+        MenuBarExtra("Focus", systemImage: "pawprint.fill") {
             MenuBarView()
                 .environmentObject(appState)
         }
