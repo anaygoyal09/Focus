@@ -220,4 +220,14 @@ class FocusManager: ObservableObject {
         blockerWindow?.close()
         blockerWindow = nil
     }
+    
+    func dismissBlocker() {
+        // Clear blocking state
+        appState.isBlocking = false
+        appState.currentBlockedApp = nil
+        
+        // Close window
+        blockerWindow?.close()
+        blockerWindow = nil
+    }
 }
