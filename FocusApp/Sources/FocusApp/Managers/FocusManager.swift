@@ -106,15 +106,17 @@ class FocusManager: ObservableObject {
         let hostingController = NSHostingController(rootView: promptView)
         
         let window = NSWindow(contentViewController: hostingController)
-        window.styleMask = [.titled, .fullSizeContentView] // Minimal style
+        window.styleMask = [.titled, .closable, .fullSizeContentView] // Standard style
         window.title = "Time's Up"
+        window.titleVisibility = .hidden
         window.isOpaque = false
         window.backgroundColor = NSColor.clear
         window.level = .floating // Keep on top
         window.center()
+        window.isReleasedWhenClosed = false
         
-        // Make it hard to close
-        window.standardWindowButton(.closeButton)?.isHidden = true
+        // Enable close button
+        window.standardWindowButton(.closeButton)?.isHidden = false
         window.standardWindowButton(.miniaturizeButton)?.isHidden = true
         window.standardWindowButton(.zoomButton)?.isHidden = true
         

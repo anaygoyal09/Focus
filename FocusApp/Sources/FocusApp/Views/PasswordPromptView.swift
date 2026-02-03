@@ -100,17 +100,6 @@ struct PasswordPromptView: View {
                     }
                     .buttonStyle(.plain)
                     .keyboardShortcut(.defaultAction)
-                    
-                    // Close button
-                    Button(action: {
-                        focusManager.dismissBlocker()
-                    }) {
-                        Text("Close Window")
-                            .font(.system(size: 13, weight: .medium))
-                            .foregroundColor(.secondary)
-                    }
-                    .buttonStyle(.plain)
-                    .keyboardShortcut(.cancelAction)
                 }
                 .padding(48)
                 .background(
