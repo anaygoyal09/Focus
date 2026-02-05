@@ -121,7 +121,7 @@ Focus runs entirely locally on your Mac. No data is sent to any external servers
 
 ## License
 
-MIT License — see [LICENSE](LICENSE) for details.
+This project is open source. You are free to use, modify, and distribute this software without restriction.
 
 ## Contributing
 

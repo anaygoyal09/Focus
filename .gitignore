@@ -1,0 +1,8 @@
+.DS_Store
+.build/
+.swiftpm/
+*.xcodeproj
+*.xcworkspace
+build/
+DerivedData/
+FocusApp/Focus.app/Contents/MacOS/FocusApp
