@@ -1,0 +1,81 @@
+client:
+  name: basic
+  file-system: device-agnostic
+tools: {}
+targets:
+  "FocusApp-arm64-apple-macosx26.0-debug.exe": ["<FocusApp-arm64-apple-macosx26.0-debug.exe>"]
+  "FocusApp-arm64-apple-macosx26.0-debug.module": ["<FocusApp-arm64-apple-macosx26.0-debug.module>"]
+  "PackageStructure": ["<PackageStructure>"]
+  "main": ["<FocusApp-arm64-apple-macosx26.0-debug.exe>","<FocusApp-arm64-apple-macosx26.0-debug.module>"]
+  "test": ["<FocusApp-arm64-apple-macosx26.0-debug.exe>","<FocusApp-arm64-apple-macosx26.0-debug.module>"]
+default: "main"
+nodes:
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/":
+    is-directory-structure: true
+    content-exclusion-patterns: [".git",".build"]
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp":
+    is-mutated: true
+commands:
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp-entitlement.plist":
+    tool: write-auxiliary-file
+    inputs: ["<entitlement-plist>","<com.apple.security.get-task-allow>"]
+    outputs: ["/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp-entitlement.plist"]
+    description: "Write auxiliary file /Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp-entitlement.plist"
+
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/sources":
+    tool: write-auxiliary-file
+    inputs: ["<sources-file-list>","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/FocusApp.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Managers/FocusManager.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift"]
+    outputs: ["/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/sources"]
+    description: "Write auxiliary file /Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/sources"
+
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.product/Objects.LinkFileList":
+    tool: write-auxiliary-file
+    inputs: ["<link-file-list>","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusApp.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusData.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusManager.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/MenuBarView.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/SettingsView.swift.o"]
+    outputs: ["/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.product/Objects.LinkFileList"]
+    description: "Write auxiliary file /Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.product/Objects.LinkFileList"
+
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt":
+    tool: write-auxiliary-file
+    inputs: ["<swift-get-version>","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"]
+    outputs: ["/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"]
+    always-out-of-date: "true"
+    description: "Write auxiliary file /Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt"
+
+  "<FocusApp-arm64-apple-macosx26.0-debug.exe>":
+    tool: phony
+    inputs: ["<FocusApp-arm64-apple-macosx26.0-debug.exe-CodeSigning>"]
+    outputs: ["<FocusApp-arm64-apple-macosx26.0-debug.exe>"]
+
+  "<FocusApp-arm64-apple-macosx26.0-debug.module>":
+    tool: phony
+    inputs: ["/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusApp.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusManager.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusData.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/MenuBarView.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/SettingsView.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/Modules/FocusApp.swiftmodule"]
+    outputs: ["<FocusApp-arm64-apple-macosx26.0-debug.module>"]
+
+  "C.FocusApp-arm64-apple-macosx26.0-debug.exe":
+    tool: shell
+    inputs: ["/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusApp.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusData.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusManager.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/MenuBarView.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/SettingsView.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.product/Objects.LinkFileList"]
+    outputs: ["/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp"]
+    description: "Linking ./.build/arm64-apple-macosx/debug/FocusApp"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-L","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug","-o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp","-module-name","FocusApp","-Xlinker","-no_warn_duplicate_libraries","-emit-executable","-Xlinker","-alias","-Xlinker","_FocusApp_main","-Xlinker","_main","-Xlinker","-rpath","-Xlinker","@loader_path","@/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.product/Objects.LinkFileList","-Xlinker","-rpath","-Xlinker","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift-6.2/macosx","-target","arm64-apple-macosx13.0","-Xlinker","-add_ast_path","-Xlinker","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/Modules/FocusApp.swiftmodule","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g"]
+
+  "C.FocusApp-arm64-apple-macosx26.0-debug.exe-entitlements":
+    tool: shell
+    inputs: ["/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp-entitlement.plist"]
+    outputs: ["<FocusApp-arm64-apple-macosx26.0-debug.exe-CodeSigning>"]
+    description: "Applying debug entitlements to ./.build/arm64-apple-macosx/debug/FocusApp"
+    args: ["codesign","--force","--sign","-","--entitlements","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp-entitlement.plist","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp"]
+
+  "C.FocusApp-arm64-apple-macosx26.0-debug.module":
+    tool: shell
+    inputs: ["/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/FocusApp.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Managers/FocusManager.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/swift-version--58304C5D6DBC2206.txt","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/sources"]
+    outputs: ["/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusApp.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusManager.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusData.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/MenuBarView.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/SettingsView.swift.o","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/Modules/FocusApp.swiftmodule"]
+    description: "Compiling Swift Module 'FocusApp' (6 sources)"
+    args: ["/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc","-module-name","FocusApp","-emit-dependencies","-emit-module","-emit-module-path","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/Modules/FocusApp.swiftmodule","-output-file-map","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/output-file-map.json","-incremental","-c","@/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/sources","-I","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/Modules","-target","arm64-apple-macosx13.0","-incremental","-enable-batch-mode","-serialize-diagnostics","-index-store-path","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/index/store","-Onone","-enable-testing","-j14","-DSWIFT_PACKAGE","-DDEBUG","-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE","-module-cache-path","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/ModuleCache","-parseable-output","-Xfrontend","-entry-point-function-name","-Xfrontend","FocusApp_main","-color-diagnostics","-swift-version","5","-plugin-path","/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing","-sdk","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-F","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-I","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-L","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib","-g","-Xcc","-isysroot","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks","-Xcc","-F","-Xcc","/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks","-Xcc","-fPIC","-Xcc","-g","-package-name","focusapp"]
+
+  "PackageStructure":
+    tool: package-structure-tool
+    inputs: ["/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Package.swift","/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Package.resolved"]
+    outputs: ["<PackageStructure>"]
+    description: "Planning build"
+    allow-missing-inputs: true
+

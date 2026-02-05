@@ -1,0 +1,47 @@
+{
+  "": {
+    "swift-dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/master.swiftdeps"
+  },
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/FocusApp.swift": {
+    "dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusApp.d",
+    "object": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusApp.swift.o",
+    "swiftmodule": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusApp~partial.swiftmodule",
+    "swift-dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusApp.swiftdeps",
+    "diagnostics": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusApp.dia"
+  },
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Managers/FocusManager.swift": {
+    "dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusManager.d",
+    "object": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusManager.swift.o",
+    "swiftmodule": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusManager~partial.swiftmodule",
+    "swift-dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusManager.swiftdeps",
+    "diagnostics": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusManager.dia"
+  },
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift": {
+    "dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusData.d",
+    "object": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusData.swift.o",
+    "swiftmodule": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusData~partial.swiftmodule",
+    "swift-dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusData.swiftdeps",
+    "diagnostics": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/FocusData.dia"
+  },
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift": {
+    "dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/MenuBarView.d",
+    "object": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/MenuBarView.swift.o",
+    "swiftmodule": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/MenuBarView~partial.swiftmodule",
+    "swift-dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/MenuBarView.swiftdeps",
+    "diagnostics": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/MenuBarView.dia"
+  },
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift": {
+    "dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView.d",
+    "object": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView.swift.o",
+    "swiftmodule": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView~partial.swiftmodule",
+    "swift-dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView.swiftdeps",
+    "diagnostics": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView.dia"
+  },
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift": {
+    "dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/SettingsView.d",
+    "object": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/SettingsView.swift.o",
+    "swiftmodule": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/SettingsView~partial.swiftmodule",
+    "swift-dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/SettingsView.swiftdeps",
+    "diagnostics": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/debug/FocusApp.build/SettingsView.dia"
+  }
+}

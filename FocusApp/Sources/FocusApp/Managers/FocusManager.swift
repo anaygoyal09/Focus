@@ -4,7 +4,7 @@ import UserNotifications
 import Combine
 import SwiftUI
 
-class FocusManager: ObservableObject {
+class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     @Published var appState: AppState
     private var timer: Timer?
     private var workspace = NSWorkspace.shared
@@ -18,6 +18,7 @@ class FocusManager: ObservableObject {
     
     init(appState: AppState) {
         self.appState = appState
+        super.init()
         startMonitoring()
     }
     
@@ -120,6 +121,8 @@ class FocusManager: ObservableObject {
         window.standardWindowButton(.miniaturizeButton)?.isHidden = true
         window.standardWindowButton(.zoomButton)?.isHidden = true
         
+        window.delegate = self
+
         self.blockerWindow = window
         window.orderFrontRegardless()
     }
@@ -227,9 +230,18 @@ class FocusManager: ObservableObject {
         // Clear blocking state
         appState.isBlocking = false
         appState.currentBlockedApp = nil
-        
+
         // Close window
-        blockerWindow?.close()
+        if let window = blockerWindow {
+            blockerWindow = nil
+            window.close()
+        }
+    }
+
+    func windowWillClose(_ notification: Notification) {
+        // Ensure state is cleared if the window is closed via the title bar.
+        appState.isBlocking = false
+        appState.currentBlockedApp = nil
         blockerWindow = nil
     }
 }
