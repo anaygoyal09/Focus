@@ -244,4 +244,13 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
         appState.currentBlockedApp = nil
         blockerWindow = nil
     }
+
+    func dismissQuitPrompt() {
+        // Close the quit prompt window
+        NSApp.keyWindow?.close()
+    }
+
+    func performQuit() {
+        NSApp.terminate(nil)
+    }
 }

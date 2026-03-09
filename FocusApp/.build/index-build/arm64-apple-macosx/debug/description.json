@@ -44,6 +44,10 @@
         },
         {
           "kind" : "file",
+          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/QuitPasswordPromptView.swift"
+        },
+        {
+          "kind" : "file",
           "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift"
         },
         {
@@ -64,6 +68,7 @@
         "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/FocusData.swift.o",
         "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/MenuBarView.swift.o",
         "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView.swift.o",
+        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/QuitPasswordPromptView.swift.o",
         "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/SettingsView.swift.o"
       ],
       "otherArguments" : [
@@ -141,6 +146,7 @@
         "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift",
         "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift",
         "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift",
+        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/QuitPasswordPromptView.swift",
         "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift"
       ],
       "tempsPath" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build",
@@ -163,6 +169,7 @@
       "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift",
       "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift",
       "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift",
+      "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/QuitPasswordPromptView.swift",
       "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift",
       "-I",
       "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/Modules",
@@ -272,6 +279,10 @@
         {
           "kind" : "file",
           "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/QuitPasswordPromptView.swift"
         },
         {
           "kind" : "file",

@@ -95,11 +95,6 @@ struct MenuBarView: View {
                     openWindow(id: "settings")
                     NSApp.activate(ignoringOtherApps: true)
                 }
-                
-                MenuButton(title: "Quit Focus", icon: "power", shortcut: "⌘Q") {
-                    appState.saveData()
-                    NSApplication.shared.terminate(nil)
-                }
             }
             .padding(.vertical, 6)
         }

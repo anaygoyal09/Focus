@@ -37,6 +37,13 @@
     "swift-dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView.swiftdeps",
     "diagnostics": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/PasswordPromptView.dia"
   },
+  "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/QuitPasswordPromptView.swift": {
+    "dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/QuitPasswordPromptView.d",
+    "object": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/QuitPasswordPromptView.swift.o",
+    "swiftmodule": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/QuitPasswordPromptView~partial.swiftmodule",
+    "swift-dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/QuitPasswordPromptView.swiftdeps",
+    "diagnostics": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/QuitPasswordPromptView.dia"
+  },
   "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift": {
     "dependencies": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/SettingsView.d",
     "object": "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/index-build/arm64-apple-macosx/debug/FocusApp.build/SettingsView.swift.o",
