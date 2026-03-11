@@ -15,6 +15,8 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     private var lastNotificationTime: Date = Date.distantPast
     // Track which thresholds we've already notified for each app
     private var notifiedThresholds: [String: Set<TimeInterval>] = [:]
+    // Track the last frontmost app to detect switches
+    private var lastFrontmostBundleId: String?
     
     init(appState: AppState) {
         self.appState = appState
@@ -49,6 +51,16 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
         if let appIndex = appState.focusModes[activeModeIndex].apps.firstIndex(where: { $0.bundleIdentifier == bundleId }) {
             var trackedApp = appState.focusModes[activeModeIndex].apps[appIndex]
             
+            // Notify when switching to a tracked app
+            if bundleId != lastFrontmostBundleId {
+                lastFrontmostBundleId = bundleId
+                let minutes = Int(trackedApp.timeRemaining / 60)
+                sendNotification(
+                    title: "⏱ \(trackedApp.name) is tracked",
+                    body: "You have \(minutes) min left. Check your time and close if not needed."
+                )
+            }
+            
             // Increment usage
             trackedApp.timeUsedToday += 1.0
             
@@ -62,6 +74,9 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
             if Int(trackedApp.timeUsedToday) % 60 == 0 {
                  appState.saveData()
             }
+        } else {
+            // Switched to an untracked app — reset so next switch to a tracked app triggers notification
+            lastFrontmostBundleId = bundleId
         }
     }
     
