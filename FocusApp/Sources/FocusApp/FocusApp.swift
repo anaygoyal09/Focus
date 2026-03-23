@@ -53,6 +53,7 @@ struct FocusApp: App {
         }
         .commands {
             CommandGroup(replacing: .newItem) { } // Remove New
+            CommandGroup(replacing: .appTermination) { } // Remove Quit / Cmd+Q
         }
     }
 }
