@@ -18,6 +18,9 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     private var workspace = NSWorkspace.shared
     private var cancellables = Set<AnyCancellable>()
     private var blockerWindow: NSWindow?
+    private let monitoringInterval: TimeInterval = 2.0
+    private let permissionRefreshInterval: TimeInterval = 30.0
+    private let browserURLRefreshInterval: TimeInterval = 3.0
     
     // Track last notification sent to avoid spamming
     private var lastNotificationTime: Date = Date.distantPast
@@ -25,6 +28,8 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     private var notifiedThresholds: [String: Set<TimeInterval>] = [:]
     // Track the last frontmost app to detect switches
     private var lastFrontmostBundleId: String?
+    private var lastPermissionRefresh: Date = .distantPast
+    private var browserSnapshotCache: [String: (snapshot: BrowserSnapshot, checkedAt: Date)] = [:]
     private let supportedBrowserBundleIds: Set<String> = [
         "com.apple.Safari",
         "com.google.Chrome",
@@ -42,8 +47,7 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     }
     
     private func startMonitoring() {
-        // Run loop every 1 second
-        timer = Timer.scheduledTimer(withTimeInterval: 1.0, repeats: true) { [weak self] _ in
+        timer = Timer.scheduledTimer(withTimeInterval: monitoringInterval, repeats: true) { [weak self] _ in
             self?.checkCurrentActivity()
         }
     }
@@ -51,7 +55,7 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     private func checkCurrentActivity() {
         // Check for daily reset (in case app runs past midnight)
         appState.checkDailyReset()
-        refreshPermissionStatus()
+        refreshPermissionStatusIfNeeded()
         checkActiveSession()
         
         guard let activeModeIndex = appState.focusModes.firstIndex(where: { $0.id == appState.activeModeId }) else {
@@ -81,7 +85,7 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
             }
             
             // Increment usage
-            trackedApp.timeUsedToday += 1.0
+            trackedApp.timeUsedToday += monitoringInterval
             
             // Update State
             appState.focusModes[activeModeIndex].apps[appIndex] = trackedApp
@@ -90,7 +94,7 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
             checkTimeLimit(for: trackedApp, appObject: frontApp)
             
             // Save periodically
-            if Int(trackedApp.timeUsedToday) % 60 == 0 {
+            if Int(trackedApp.timeUsedToday) % 60 < Int(monitoringInterval) {
                  appState.saveData()
             }
         } else {
@@ -121,7 +125,7 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
         let matchingTargetKey = matchingTarget.map(targetUsageKey(for:))
 
         if let matchingTarget {
-            session.usageByTarget[targetUsageKey(for: matchingTarget), default: 0] += 1
+            session.usageByTarget[targetUsageKey(for: matchingTarget), default: 0] += monitoringInterval
         }
 
         var shouldBlock: Bool
@@ -189,6 +193,12 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
         status.browserAutomation = appState.permissionStatus.browserAutomation
 
         appState.permissionStatus = status
+        lastPermissionRefresh = Date()
+    }
+
+    private func refreshPermissionStatusIfNeeded() {
+        guard Date().timeIntervalSince(lastPermissionRefresh) >= permissionRefreshInterval else { return }
+        refreshPermissionStatus()
     }
 
     func handleIncomingURL(_ url: URL) {
@@ -278,13 +288,20 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
             return nil
         }
 
+        if let cached = browserSnapshotCache[bundleId],
+           Date().timeIntervalSince(cached.checkedAt) < browserURLRefreshInterval {
+            return cached.snapshot
+        }
+
         let browserName = app.localizedName ?? browserDisplayName(bundleId)
         let urlString = frontmostBrowserURL(bundleIdentifier: bundleId)
         let url = urlString.flatMap(URL.init(string:))
         let domain = url?.host?.lowercased().replacingOccurrences(of: "^www\\.", with: "", options: .regularExpression)
         appState.permissionStatus.browserAutomation[bundleId] = url != nil
 
-        return BrowserSnapshot(bundleIdentifier: bundleId, browserName: browserName, url: url, domain: domain)
+        let snapshot = BrowserSnapshot(bundleIdentifier: bundleId, browserName: browserName, url: url, domain: domain)
+        browserSnapshotCache[bundleId] = (snapshot, Date())
+        return snapshot
     }
 
     private func frontmostBrowserURL(bundleIdentifier: String) -> String? {
@@ -332,6 +349,7 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
 
         var error: NSDictionary?
         NSAppleScript(source: scriptBody)?.executeAndReturnError(&error)
+        browserSnapshotCache[bundleId] = nil
         if let error {
             print("[Browser] Failed to blank tab for \(bundleId): \(error)")
             app.terminate()
@@ -509,7 +527,7 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     private func checkAndSendNotification(remaining: TimeInterval, appName: String) {
         for threshold in appState.warningThresholds {
             // Check if we're at this threshold (within 1 second)
-            if abs(remaining - threshold) < 1.5 {
+            if abs(remaining - threshold) <= monitoringInterval {
                 // Check if we already notified for this threshold for this app
                 if notifiedThresholds[appName]?.contains(threshold) == true {
                     return
