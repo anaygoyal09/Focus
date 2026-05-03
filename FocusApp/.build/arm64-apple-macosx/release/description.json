@@ -17,54 +17,59 @@
 
   ],
   "swiftCommands" : {
-    "C.FocusApp-arm64-apple-macosx26.0-release.module" : {
+    "C.FocusApp-arm64-apple-macosx-release.module" : {
       "executable" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc",
-      "fileList" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/sources",
-      "importPath" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/Modules",
+      "fileList" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/sources",
+      "importPath" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/Modules",
       "inputs" : [
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/FocusApp.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/FocusApp.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Managers/FocusManager.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Managers/FocusManager.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/QuitPasswordPromptView.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/sources"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/sources"
         }
       ],
       "isLibrary" : false,
       "moduleName" : "FocusApp",
-      "moduleOutputPath" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/Modules/FocusApp.swiftmodule",
+      "moduleOutputPath" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/Modules/FocusApp.swiftmodule",
       "objects" : [
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusApp.swift.o",
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusManager.swift.o",
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusData.swift.o",
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/MenuBarView.swift.o",
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/PasswordPromptView.swift.o",
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/SettingsView.swift.o"
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusApp.swift.o",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusManager.swift.o",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusData.swift.o",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/MenuBarView.swift.o",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/PasswordPromptView.swift.o",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/QuitPasswordPromptView.swift.o",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/SettingsView.swift.o"
       ],
       "otherArguments" : [
         "-target",
@@ -78,23 +83,20 @@
         "-DSWIFT_PACKAGE",
         "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
         "-module-cache-path",
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/ModuleCache",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/ModuleCache",
         "-parseable-output",
         "-Xfrontend",
         "-entry-point-function-name",
         "-Xfrontend",
         "FocusApp_main",
-        "-color-diagnostics",
         "-swift-version",
         "5",
         "-plugin-path",
         "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
         "-sdk",
-        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
         "-F",
         "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
-        "-F",
-        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
         "-I",
         "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
         "-L",
@@ -103,15 +105,11 @@
         "-Xcc",
         "-isysroot",
         "-Xcc",
-        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
         "-Xcc",
         "-F",
         "-Xcc",
         "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
-        "-Xcc",
-        "-F",
-        "-Xcc",
-        "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
         "-Xcc",
         "-fPIC",
         "-Xcc",
@@ -119,47 +117,52 @@
         "-package-name",
         "focusapp"
       ],
-      "outputFileMapPath" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/output-file-map.json",
+      "outputFileMapPath" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/output-file-map.json",
       "outputs" : [
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusApp.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusApp.swift.o"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusManager.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusManager.swift.o"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusData.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusData.swift.o"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/MenuBarView.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/MenuBarView.swift.o"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/PasswordPromptView.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/PasswordPromptView.swift.o"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/SettingsView.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/QuitPasswordPromptView.swift.o"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/Modules/FocusApp.swiftmodule"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/SettingsView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/Modules/FocusApp.swiftmodule"
         }
       ],
       "prepareForIndexing" : false,
       "sources" : [
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/FocusApp.swift",
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Managers/FocusManager.swift",
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift",
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift",
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift",
-        "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift"
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/FocusApp.swift",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Managers/FocusManager.swift",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/QuitPasswordPromptView.swift",
+        "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift"
       ],
-      "tempsPath" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build",
+      "tempsPath" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build",
       "wholeModuleOptimization" : true
     }
   },
@@ -174,14 +177,15 @@
       "-package-name",
       "focusapp",
       "-c",
-      "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/FocusApp.swift",
-      "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Managers/FocusManager.swift",
-      "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift",
-      "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift",
-      "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift",
-      "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift",
+      "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/FocusApp.swift",
+      "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Managers/FocusManager.swift",
+      "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift",
+      "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift",
+      "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift",
+      "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/QuitPasswordPromptView.swift",
+      "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift",
       "-I",
-      "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/Modules",
+      "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/Modules",
       "-target",
       "arm64-apple-macosx13.0",
       "-whole-module-optimization",
@@ -193,23 +197,20 @@
       "-DSWIFT_PACKAGE",
       "-DSWIFT_MODULE_RESOURCE_BUNDLE_UNAVAILABLE",
       "-module-cache-path",
-      "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/ModuleCache",
+      "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/ModuleCache",
       "-parseable-output",
       "-Xfrontend",
       "-entry-point-function-name",
       "-Xfrontend",
       "FocusApp_main",
-      "-color-diagnostics",
       "-swift-version",
       "5",
       "-plugin-path",
       "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/lib/swift/host/plugins/testing",
       "-sdk",
-      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
       "-F",
       "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
-      "-F",
-      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
       "-I",
       "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/usr/lib",
       "-L",
@@ -218,15 +219,11 @@
       "-Xcc",
       "-isysroot",
       "-Xcc",
-      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.2.sdk",
+      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/SDKs/MacOSX26.4.sdk",
       "-Xcc",
       "-F",
       "-Xcc",
       "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/Frameworks",
-      "-Xcc",
-      "-F",
-      "-Xcc",
-      "/Applications/Xcode.app/Contents/Developer/Platforms/MacOSX.platform/Developer/Library/PrivateFrameworks",
       "-Xcc",
       "-fPIC",
       "-Xcc",
@@ -254,7 +251,7 @@
     }
   },
   "writeCommands" : {
-    "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/sources" : {
+    "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/sources" : {
       "alwaysOutOfDate" : false,
       "inputs" : [
         {
@@ -263,32 +260,36 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/FocusApp.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/FocusApp.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Managers/FocusManager.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Managers/FocusManager.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Models/FocusData.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/MenuBarView.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/PasswordPromptView.swift"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/QuitPasswordPromptView.swift"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/Sources/FocusApp/Views/SettingsView.swift"
         }
       ],
-      "outputFilePath" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/sources"
+      "outputFilePath" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/sources"
     },
-    "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.product/Objects.LinkFileList" : {
+    "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.product/Objects.LinkFileList" : {
       "alwaysOutOfDate" : false,
       "inputs" : [
         {
@@ -297,32 +298,36 @@
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusApp.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusApp.swift.o"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusData.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusData.swift.o"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusManager.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/FocusManager.swift.o"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/MenuBarView.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/MenuBarView.swift.o"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/PasswordPromptView.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/PasswordPromptView.swift.o"
         },
         {
           "kind" : "file",
-          "name" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/SettingsView.swift.o"
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/QuitPasswordPromptView.swift.o"
+        },
+        {
+          "kind" : "file",
+          "name" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.build/SettingsView.swift.o"
         }
       ],
-      "outputFilePath" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.product/Objects.LinkFileList"
+      "outputFilePath" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/FocusApp.product/Objects.LinkFileList"
     },
-    "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt" : {
+    "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt" : {
       "alwaysOutOfDate" : true,
       "inputs" : [
         {
@@ -334,7 +339,7 @@
           "name" : "/Applications/Xcode.app/Contents/Developer/Toolchains/XcodeDefault.xctoolchain/usr/bin/swiftc"
         }
       ],
-      "outputFilePath" : "/Users/anaygoyal/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
+      "outputFilePath" : "/Users/TestAdmin/Library/Mobile Documents/com~apple~CloudDocs/Documents/GitHub/Focus/FocusApp/.build/arm64-apple-macosx/release/swift-version--58304C5D6DBC2206.txt"
     }
   }
 }
