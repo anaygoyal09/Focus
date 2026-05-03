@@ -34,6 +34,9 @@ struct FocusApp: App {
             MenuBarView()
                 .environmentObject(appState)
                 .environmentObject(focusManager)
+                .onOpenURL { url in
+                    focusManager.handleIncomingURL(url)
+                }
         }
         .menuBarExtraStyle(.window) // Uses the MenuBarView as a popover
         
@@ -42,6 +45,9 @@ struct FocusApp: App {
             SettingsView()
                 .environmentObject(appState)
                 .environmentObject(focusManager)
+                .onOpenURL { url in
+                    focusManager.handleIncomingURL(url)
+                }
                 .onAppear {
                     // Show in Dock when Settings opens
                     NSApp.setActivationPolicy(.regular)

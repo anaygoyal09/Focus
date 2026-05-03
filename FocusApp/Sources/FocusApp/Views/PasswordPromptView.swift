@@ -2,184 +2,89 @@ import SwiftUI
 
 struct PasswordPromptView: View {
     @EnvironmentObject var focusManager: FocusManager
-    @State private var passwordInput: String = ""
-    @State private var showWrongPassword: Bool = false
-    @State private var shake: Bool = false
-    
+
+    private var blockedName: String {
+        focusManager.appState.currentBlockedApp?.name ?? "This page"
+    }
+
     var body: some View {
         ZStack {
-            // Blurred background
-            VisualEffectView(material: .fullScreenUI, blendingMode: .behindWindow)
-                .ignoresSafeArea()
-            
+            LinearGradient(
+                colors: [
+                    Color.black,
+                    Color(red: 0.10, green: 0.10, blue: 0.10),
+                    Color.black
+                ],
+                startPoint: .topLeading,
+                endPoint: .bottomTrailing
+            )
+            .overlay(
+                RadialGradient(
+                    colors: [
+                        Color.white.opacity(0.10),
+                        Color.clear
+                    ],
+                    center: .center,
+                    startRadius: 16,
+                    endRadius: 420
+                )
+            )
+            .ignoresSafeArea()
+
             VStack(spacing: 0) {
                 Spacer()
-                
-                // Main content card
-                ZStack(alignment: .topTrailing) {
-                    VStack(spacing: 32) {
-                        // Icon with pulse animation
-                        ZStack {
-                            Circle()
-                                .fill(Color.red.opacity(0.1))
-                                .frame(width: 120, height: 120)
-                            
-                            Circle()
-                                .fill(Color.red.opacity(0.15))
-                                .frame(width: 88, height: 88)
-                            
-                            Image(systemName: "hand.raised.fill")
-                                .font(.system(size: 40))
-                                .foregroundColor(.red)
-                        }
-                        
-                        // Title and description
-                        VStack(spacing: 12) {
-                            Text("Time's Up")
-                                .font(.system(size: 32, weight: .bold))
-                                .foregroundColor(.primary)
-                            
-                            if let blockedApp = focusManager.appState.currentBlockedApp {
-                                Text("You've reached your limit for **\(blockedApp.name)**")
-                                    .font(.system(size: 15))
-                                    .foregroundColor(.secondary)
-                                    .multilineTextAlignment(.center)
-                            }
-                        }
-                        
-                        // Password section
-                        VStack(spacing: 16) {
-                            VStack(spacing: 8) {
-                                Text("Want 5 more minutes?")
-                                    .font(.system(size: 14, weight: .medium))
-                                    .foregroundColor(.primary)
-                                
-                                Text("Type the passphrase to extend")
-                                    .font(.system(size: 12))
-                                    .foregroundStyle(.tertiary)
-                            }
-                            
-                            SecureField("Enter passphrase...", text: $passwordInput)
-                                .textFieldStyle(.plain)
-                                .font(.system(size: 15))
-                                .padding(.horizontal, 16)
-                                .padding(.vertical, 12)
-                                .background(Color(NSColor.controlBackgroundColor))
-                                .clipShape(RoundedRectangle(cornerRadius: 10))
-                                .overlay(
-                                    RoundedRectangle(cornerRadius: 10)
-                                        .stroke(showWrongPassword ? Color.red.opacity(0.5) : Color.gray.opacity(0.2), lineWidth: 1)
-                                )
-                                .frame(width: 280)
-                                .offset(x: shake ? -10 : 0)
-                                .animation(.interpolatingSpring(stiffness: 500, damping: 10), value: shake)
-                                .onSubmit {
-                                    checkPassword()
-                                }
-                            
-                            if showWrongPassword {
-                                HStack(spacing: 6) {
-                                    Image(systemName: "xmark.circle.fill")
-                                        .font(.system(size: 12))
-                                    Text("Incorrect passphrase")
-                                        .font(.system(size: 12))
-                                }
-                                .foregroundColor(.red)
-                                .transition(.opacity.combined(with: .scale(scale: 0.9)))
-                            }
-                        }
-                        
-                        // Action buttons
-                        VStack(spacing: 10) {
-                            Button(action: checkPassword) {
-                                Text("Extend Time")
-                                    .font(.system(size: 14, weight: .semibold))
-                                    .foregroundColor(.white)
-                                    .frame(width: 200)
-                                    .padding(.vertical, 12)
-                                    .background(Color.accentColor)
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                            }
-                            .buttonStyle(.plain)
-                            .keyboardShortcut(.defaultAction)
 
-                            Button(action: {
-                                focusManager.dismissBlocker()
-                            }) {
-                                Text("Close")
-                                    .font(.system(size: 13, weight: .medium))
-                                    .foregroundColor(.secondary)
-                                    .frame(width: 200)
-                                    .padding(.vertical, 10)
-                                    .background(Color(NSColor.controlBackgroundColor))
-                                    .clipShape(RoundedRectangle(cornerRadius: 10))
-                            }
-                            .buttonStyle(.plain)
-                            .keyboardShortcut(.cancelAction)
-                        }
+                VStack(spacing: 28) {
+                    ZStack {
+                        RoundedRectangle(cornerRadius: 12)
+                            .fill(LinearGradient(
+                                colors: [Color.green.opacity(0.95), Color.green.opacity(0.55)],
+                                startPoint: .topLeading,
+                                endPoint: .bottomTrailing
+                            ))
+                            .frame(width: 48, height: 48)
+                            .shadow(color: .black.opacity(0.35), radius: 20, y: 12)
+
+                        Image(systemName: "target")
+                            .font(.system(size: 26, weight: .bold))
+                            .foregroundColor(.white.opacity(0.92))
                     }
-                    
+
+                    Text("\(blockedName) has been blocked by Focus")
+                        .font(.system(size: 31, weight: .bold))
+                        .foregroundColor(.white.opacity(0.86))
+                        .multilineTextAlignment(.center)
+                        .lineLimit(3)
+                        .frame(maxWidth: 760)
+
                     Button(action: {
-                        focusManager.dismissBlocker()
+                        focusManager.snoozeCurrentBlock(minutes: 3)
                     }) {
-                        Image(systemName: "xmark")
-                            .font(.system(size: 12, weight: .semibold))
-                            .foregroundColor(.secondary)
-                            .frame(width: 24, height: 24)
-                            .background(Color(NSColor.windowBackgroundColor).opacity(0.8))
-                            .clipShape(Circle())
+                        Label("Snooze for 3 minutes", systemImage: "arrow.counterclockwise")
+                            .font(.system(size: 17, weight: .semibold))
+                            .foregroundColor(.white.opacity(0.88))
+                            .padding(.horizontal, 18)
+                            .padding(.vertical, 11)
+                            .background(Color.white.opacity(0.14))
+                            .clipShape(RoundedRectangle(cornerRadius: 8))
                     }
                     .buttonStyle(.plain)
-                    .padding(12)
+                    .keyboardShortcut(.defaultAction)
                 }
-                .padding(48)
-                .background(
-                    RoundedRectangle(cornerRadius: 24)
-                        .fill(Color(NSColor.windowBackgroundColor))
-                        .shadow(color: .black.opacity(0.15), radius: 40, y: 20)
-                )
-                
+
                 Spacer()
-                
-                // Bottom hint
-                VStack(spacing: 4) {
-                    Text("Take a moment to reflect.")
-                        .font(.system(size: 12))
-                        .foregroundColor(.secondary)
-                    
-                    Text("Do you really need more time?")
-                        .font(.system(size: 11))
-                        .foregroundStyle(.tertiary)
-                }
-                .padding(.bottom, 40)
+
+                Text("End your focus session to access this page.")
+                    .font(.system(size: 15, weight: .medium))
+                    .foregroundColor(.white.opacity(0.28))
+                    .padding(.bottom, 44)
             }
+            .padding(36)
         }
-        .frame(minWidth: 500, minHeight: 600)
-    }
-    
-    private func checkPassword() {
-        if passwordInput == "iamthinkingtwice" {
-            withAnimation {
-                focusManager.extendTime(minutes: 5)
-                passwordInput = ""
-                showWrongPassword = false
-            }
-        } else {
-            withAnimation(.easeInOut(duration: 0.1)) {
-                showWrongPassword = true
-                shake = true
-            }
-            passwordInput = ""
-            
-            // Reset shake
-            DispatchQueue.main.asyncAfter(deadline: .now() + 0.3) {
-                shake = false
-            }
-        }
+        .frame(minWidth: 920, minHeight: 620)
     }
 }
 
-// Background blur helper
 struct VisualEffectView: NSViewRepresentable {
     var material: NSVisualEffectView.Material
     var blendingMode: NSVisualEffectView.BlendingMode

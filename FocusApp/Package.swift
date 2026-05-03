@@ -12,7 +12,8 @@ let package = Package(
     targets: [
         .executableTarget(
             name: "FocusApp",
-            path: "Sources/FocusApp"
+            path: "Sources/FocusApp",
+            exclude: ["Info.plist", "Views/PasswordPromptView 2.swift"]
         )
     ]
 )

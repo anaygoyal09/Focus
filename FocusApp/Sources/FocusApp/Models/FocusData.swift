@@ -1,5 +1,67 @@
 import Foundation
 
+enum FocusSessionMode: String, Codable, CaseIterable, Identifiable {
+    case block
+    case allow
+
+    var id: String { rawValue }
+
+    var title: String {
+        rawValue.capitalized
+    }
+}
+
+enum FocusTargetKind: String, Codable {
+    case app
+    case website
+}
+
+struct FocusTarget: Identifiable, Codable, Equatable {
+    var id: UUID = UUID()
+    var kind: FocusTargetKind
+    var name: String
+    var bundleIdentifier: String?
+    var browserBundleIdentifier: String?
+    var browserName: String?
+    var domain: String?
+
+    var displayName: String {
+        switch kind {
+        case .app:
+            return name
+        case .website:
+            let site = domain ?? name
+            if let browserName {
+                return "\(site) in \(browserName)"
+            }
+            return site
+        }
+    }
+}
+
+struct FocusSession: Identifiable, Codable, Equatable {
+    var id: UUID = UUID()
+    var mode: FocusSessionMode = .block
+    var duration: TimeInterval?
+    var startedAt: Date = Date()
+    var endsAt: Date?
+    var targets: [FocusTarget] = []
+    var usageByTarget: [String: TimeInterval] = [:]
+    var lastBlockedTargetName: String?
+    var lastBlockedTargetKey: String?
+    var snoozedUntilByTarget: [String: Date] = [:]
+
+    var isRunning: Bool {
+        guard let endsAt else { return true }
+        return Date() < endsAt
+    }
+
+    var timeRemaining: TimeInterval? {
+        guard let endsAt else { return nil }
+        return max(0, endsAt.timeIntervalSinceNow)
+    }
+}
+
 struct TrackedApp: Identifiable, Codable, Equatable {
     var id: String { bundleIdentifier }
     let bundleIdentifier: String
@@ -24,6 +86,8 @@ struct FocusMode: Identifiable, Codable, Equatable {
 class AppState: ObservableObject {
     @Published var focusModes: [FocusMode] = []
     @Published var activeModeId: UUID?
+    @Published var activeSession: FocusSession?
+    @Published var permissionStatus: PermissionStatus = PermissionStatus()
     @Published var isBlocking: Bool = false
     @Published var currentBlockedApp: TrackedApp?
     @Published var lastResetDate: Date = Date()
@@ -34,6 +98,7 @@ class AppState: ObservableObject {
     
     init() {
         loadData()
+        loadSessionData()
         checkDailyReset()
     }
     
@@ -78,6 +143,33 @@ class AppState: ObservableObject {
             print("Failed to save data: \(error)")
         }
     }
+
+    private func sessionDataPath() -> URL {
+        let paths = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask)
+        return paths[0].appendingPathComponent("FocusSessionData.json")
+    }
+
+    func saveSessionData() {
+        do {
+            let data = try JSONEncoder().encode(activeSession)
+            try data.write(to: sessionDataPath())
+        } catch {
+            print("Failed to save session data: \(error)")
+        }
+    }
+
+    func loadSessionData() {
+        do {
+            let data = try Data(contentsOf: sessionDataPath())
+            activeSession = try JSONDecoder().decode(FocusSession?.self, from: data)
+            if activeSession?.isRunning == false {
+                activeSession = nil
+                saveSessionData()
+            }
+        } catch {
+            activeSession = nil
+        }
+    }
     
     func loadData() {
         do {
@@ -97,4 +189,9 @@ class AppState: ObservableObject {
             ]
         }
     }
+}
+
+struct PermissionStatus: Equatable {
+    var accessibility: Bool = false
+    var browserAutomation: [String: Bool] = [:]
 }

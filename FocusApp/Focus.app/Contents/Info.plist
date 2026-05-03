@@ -24,6 +24,19 @@
     <true/>
     <key>NSHighResolutionCapable</key>
     <true/>
+    <key>NSAppleEventsUsageDescription</key>
+    <string>Focus needs permission to read and redirect the active browser tab when a website focus session is running.</string>
+    <key>CFBundleURLTypes</key>
+    <array>
+        <dict>
+            <key>CFBundleURLName</key>
+            <string>Focus</string>
+            <key>CFBundleURLSchemes</key>
+            <array>
+                <string>focusapp</string>
+            </array>
+        </dict>
+    </array>
     <key>NSPrincipalClass</key>
     <string>NSApplication</string>
 </dict>

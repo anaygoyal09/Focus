@@ -10,10 +10,10 @@ struct MenuBarView: View {
             // Header
             HStack {
                 Circle()
-                    .fill(appState.activeModeId != nil ? Color.green : Color.gray.opacity(0.4))
+                    .fill((appState.activeModeId != nil || appState.activeSession != nil) ? Color.green : Color.gray.opacity(0.4))
                     .frame(width: 8, height: 8)
                 
-                Text(appState.activeModeId != nil ? "Focus Active" : "Focus Inactive")
+                Text((appState.activeModeId != nil || appState.activeSession != nil) ? "Focus Active" : "Focus Inactive")
                     .font(.system(size: 13, weight: .semibold))
                     .foregroundColor(.primary)
                 
@@ -23,28 +23,27 @@ struct MenuBarView: View {
             .padding(.vertical, 12)
             .background(Color(NSColor.controlBackgroundColor).opacity(0.5))
             
-            // Active Mode Content
-            if let activeId = appState.activeModeId,
-               let mode = appState.focusModes.first(where: { $0.id == activeId }) {
-                
+            // Active Session Content
+            if let session = appState.activeSession {
                 VStack(spacing: 0) {
-                    // Mode name badge
                     HStack {
-                        Label(mode.name, systemImage: "target")
+                        Label("\(session.mode.title) Session", systemImage: session.mode == .block ? "hand.raised.fill" : "checkmark.shield.fill")
                             .font(.system(size: 12, weight: .medium))
                             .foregroundColor(.secondary)
                         Spacer()
+                        Text(sessionTimeText(session))
+                            .font(.system(size: 12, weight: .semibold, design: .rounded))
+                            .foregroundColor(.green)
                     }
                     .padding(.horizontal, 16)
                     .padding(.top, 12)
                     .padding(.bottom, 8)
-                    
-                    // App list
-                    ForEach(mode.apps) { app in
-                        AppTimeRow(app: app)
+
+                    ForEach(session.targets) { target in
+                        SessionTargetRow(target: target, seconds: session.usageByTarget[usageKey(for: target), default: 0])
                     }
                 }
-                
+
             } else {
                 // Empty state
                 VStack(spacing: 8) {
@@ -62,6 +61,8 @@ struct MenuBarView: View {
                 }
                 .padding(.vertical, 24)
             }
+
+            dailyAppLimitsSection
             
             Divider()
                 .padding(.top, 8)
@@ -100,6 +101,155 @@ struct MenuBarView: View {
         }
         .frame(width: 280)
         .background(VisualEffectBackground())
+    }
+
+    @ViewBuilder
+    private var dailyAppLimitsSection: some View {
+        if !appState.focusModes.isEmpty {
+            VStack(spacing: 0) {
+                Divider()
+                    .padding(.top, appState.activeSession == nil ? 0 : 8)
+
+                HStack {
+                    Label("Daily App Limits", systemImage: "calendar.badge.clock")
+                        .font(.system(size: 12, weight: .semibold))
+                        .foregroundColor(.secondary)
+                    Spacer()
+                }
+                .padding(.horizontal, 16)
+                .padding(.top, 12)
+                .padding(.bottom, 6)
+
+                ForEach(appState.focusModes) { mode in
+                    DailyModeMenuRow(
+                        mode: mode,
+                        isActive: appState.activeModeId == mode.id,
+                        toggle: {
+                            appState.activeModeId = appState.activeModeId == mode.id ? nil : mode.id
+                            appState.saveData()
+                        }
+                    )
+                }
+
+                if let activeId = appState.activeModeId,
+                   let mode = appState.focusModes.first(where: { $0.id == activeId }) {
+                    if mode.apps.isEmpty {
+                        Text("No apps added to \(mode.name)")
+                            .font(.system(size: 11))
+                            .foregroundStyle(.tertiary)
+                            .frame(maxWidth: .infinity, alignment: .leading)
+                            .padding(.horizontal, 16)
+                            .padding(.vertical, 8)
+                    } else {
+                        VStack(spacing: 0) {
+                            ForEach(mode.apps) { app in
+                                AppTimeRow(app: app)
+                            }
+                        }
+                        .padding(.top, 2)
+                    }
+                }
+            }
+        }
+    }
+
+    private func sessionTimeText(_ session: FocusSession) -> String {
+        guard let remaining = session.timeRemaining else { return "No limit" }
+        let totalSeconds = max(0, Int(remaining))
+        let hours = totalSeconds / 3600
+        let minutes = (totalSeconds % 3600) / 60
+        if hours > 0 {
+            return "\(hours)h \(minutes)m"
+        }
+        return "\(minutes)m"
+    }
+
+    private func usageKey(for target: FocusTarget) -> String {
+        switch target.kind {
+        case .app:
+            return "app:\(target.bundleIdentifier ?? target.name)"
+        case .website:
+            return "website:\(target.browserBundleIdentifier ?? "any"):\(target.domain ?? target.name)"
+        }
+    }
+}
+
+struct DailyModeMenuRow: View {
+    let mode: FocusMode
+    let isActive: Bool
+    let toggle: () -> Void
+
+    var body: some View {
+        Button(action: toggle) {
+            HStack(spacing: 10) {
+                Image(systemName: isActive ? "checkmark.circle.fill" : "circle")
+                    .font(.system(size: 13))
+                    .foregroundColor(isActive ? .green : .secondary.opacity(0.65))
+                    .frame(width: 16)
+
+                VStack(alignment: .leading, spacing: 2) {
+                    Text(mode.name)
+                        .font(.system(size: 13, weight: .medium))
+                        .foregroundColor(.primary)
+                        .lineLimit(1)
+
+                    Text("\(mode.apps.count) app\(mode.apps.count == 1 ? "" : "s")")
+                        .font(.system(size: 10))
+                        .foregroundStyle(.tertiary)
+                }
+
+                Spacer()
+
+                Text(isActive ? "On" : "Off")
+                    .font(.system(size: 11, weight: .semibold))
+                    .foregroundColor(isActive ? .green : .secondary)
+                    .padding(.horizontal, 7)
+                    .padding(.vertical, 3)
+                    .background((isActive ? Color.green : Color.gray).opacity(0.13))
+                    .clipShape(Capsule())
+            }
+            .padding(.horizontal, 12)
+            .padding(.vertical, 7)
+            .background(isActive ? Color.green.opacity(0.07) : Color.clear)
+            .clipShape(RoundedRectangle(cornerRadius: 7))
+        }
+        .buttonStyle(.plain)
+        .padding(.horizontal, 6)
+        .padding(.vertical, 1)
+    }
+}
+
+struct SessionTargetRow: View {
+    let target: FocusTarget
+    let seconds: TimeInterval
+
+    var body: some View {
+        HStack(spacing: 12) {
+            Image(systemName: target.kind == .app ? "app.dashed" : "globe")
+                .font(.system(size: 14))
+                .foregroundColor(.accentColor)
+                .frame(width: 28, height: 28)
+                .background(Color.accentColor.opacity(0.12))
+                .clipShape(RoundedRectangle(cornerRadius: 6))
+
+            VStack(alignment: .leading, spacing: 3) {
+                Text(target.displayName)
+                    .font(.system(size: 13, weight: .medium))
+                    .lineLimit(1)
+
+                Text(target.kind == .app ? "App" : "Website")
+                    .font(.system(size: 11))
+                    .foregroundStyle(.tertiary)
+            }
+
+            Spacer()
+
+            Text("\(Int(seconds / 60))m")
+                .font(.system(size: 12, weight: .semibold, design: .rounded))
+                .foregroundColor(.secondary)
+        }
+        .padding(.horizontal, 16)
+        .padding(.vertical, 8)
     }
 }
 
