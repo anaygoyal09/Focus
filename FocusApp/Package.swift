@@ -1,10 +1,10 @@
-// swift-tools-version: 5.9
+// swift-tools-version: 6.2
 import PackageDescription
 
 let package = Package(
     name: "FocusApp",
     platforms: [
-        .macOS(.v13)
+        .macOS(.v26)
     ],
     products: [
         .executable(name: "FocusApp", targets: ["FocusApp"])
@@ -13,7 +13,10 @@ let package = Package(
         .executableTarget(
             name: "FocusApp",
             path: "Sources/FocusApp",
-            exclude: ["Info.plist", "Views/PasswordPromptView 2.swift"]
+            exclude: ["Info.plist", "Views/PasswordPromptView 2.swift"],
+            swiftSettings: [
+                .swiftLanguageMode(.v5)
+            ]
         )
     ]
 )

@@ -18,9 +18,9 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     private var workspace = NSWorkspace.shared
     private var cancellables = Set<AnyCancellable>()
     private var blockerWindow: NSWindow?
-    private let monitoringInterval: TimeInterval = 2.0
-    private let permissionRefreshInterval: TimeInterval = 30.0
-    private let browserURLRefreshInterval: TimeInterval = 3.0
+    private let monitoringInterval: TimeInterval = 15.0
+    private let permissionRefreshInterval: TimeInterval = 300.0
+    private let browserURLRefreshInterval: TimeInterval = 15.0
     
     // Track last notification sent to avoid spamming
     private var lastNotificationTime: Date = Date.distantPast
@@ -29,6 +29,7 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     // Track the last frontmost app to detect switches
     private var lastFrontmostBundleId: String?
     private var lastPermissionRefresh: Date = .distantPast
+    private var lastActivityCheckDate: Date = Date()
     private var browserSnapshotCache: [String: (snapshot: BrowserSnapshot, checkedAt: Date)] = [:]
     private let supportedBrowserBundleIds: Set<String> = [
         "com.apple.Safari",
@@ -47,16 +48,28 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     }
     
     private func startMonitoring() {
+        workspace.notificationCenter.publisher(for: NSWorkspace.didActivateApplicationNotification)
+            .debounce(for: .milliseconds(250), scheduler: RunLoop.main)
+            .sink { [weak self] _ in
+                self?.checkCurrentActivity(forceBrowserRefresh: true)
+            }
+            .store(in: &cancellables)
+
         timer = Timer.scheduledTimer(withTimeInterval: monitoringInterval, repeats: true) { [weak self] _ in
             self?.checkCurrentActivity()
         }
+        timer?.tolerance = monitoringInterval * 0.5
     }
     
-    private func checkCurrentActivity() {
+    private func checkCurrentActivity(forceBrowserRefresh: Bool = false) {
+        let now = Date()
+        let elapsed = max(0, min(now.timeIntervalSince(lastActivityCheckDate), monitoringInterval))
+        lastActivityCheckDate = now
+
         // Check for daily reset (in case app runs past midnight)
         appState.checkDailyReset()
         refreshPermissionStatusIfNeeded()
-        checkActiveSession()
+        checkActiveSession(elapsed: elapsed, forceBrowserRefresh: forceBrowserRefresh)
         
         guard let activeModeIndex = appState.focusModes.firstIndex(where: { $0.id == appState.activeModeId }) else {
             // No active mode, nothing to track
@@ -85,7 +98,7 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
             }
             
             // Increment usage
-            trackedApp.timeUsedToday += monitoringInterval
+            trackedApp.timeUsedToday += elapsed
             
             // Update State
             appState.focusModes[activeModeIndex].apps[appIndex] = trackedApp
@@ -103,7 +116,7 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
         }
     }
 
-    private func checkActiveSession() {
+    private func checkActiveSession(elapsed: TimeInterval, forceBrowserRefresh: Bool) {
         guard var session = appState.activeSession else { return }
 
         if session.isRunning == false {
@@ -118,14 +131,14 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
             return
         }
 
-        let browser = browserSnapshot(for: frontApp)
+        let browser = sessionNeedsBrowserSnapshot(session, bundleId: bundleId) ? browserSnapshot(for: frontApp, forceRefresh: forceBrowserRefresh) : nil
         let matchingTarget = session.targets.first { target in
             targetMatches(target, bundleId: bundleId, browser: browser)
         }
         let matchingTargetKey = matchingTarget.map(targetUsageKey(for:))
 
         if let matchingTarget {
-            session.usageByTarget[targetUsageKey(for: matchingTarget), default: 0] += monitoringInterval
+            session.usageByTarget[targetUsageKey(for: matchingTarget), default: 0] += elapsed
         }
 
         var shouldBlock: Bool
@@ -182,7 +195,7 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     }
 
     func requestAccessibilityPermission() {
-        let options = [kAXTrustedCheckOptionPrompt.takeUnretainedValue() as String: true] as CFDictionary
+        let options = ["AXTrustedCheckOptionPrompt": true] as CFDictionary
         _ = AXIsProcessTrustedWithOptions(options)
         refreshPermissionStatus()
     }
@@ -282,13 +295,25 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
         return "blocked:app:\(bundleId)"
     }
 
-    private func browserSnapshot(for app: NSRunningApplication) -> BrowserSnapshot? {
+    private func sessionNeedsBrowserSnapshot(_ session: FocusSession, bundleId: String) -> Bool {
+        guard supportedBrowserBundleIds.contains(bundleId) else { return false }
+
+        switch session.mode {
+        case .block:
+            return session.targets.contains { $0.kind == .website }
+        case .allow:
+            return session.targets.contains { $0.kind == .website }
+        }
+    }
+
+    private func browserSnapshot(for app: NSRunningApplication, forceRefresh: Bool = false) -> BrowserSnapshot? {
         guard let bundleId = app.bundleIdentifier,
               supportedBrowserBundleIds.contains(bundleId) else {
             return nil
         }
 
-        if let cached = browserSnapshotCache[bundleId],
+        if !forceRefresh,
+           let cached = browserSnapshotCache[bundleId],
            Date().timeIntervalSince(cached.checkedAt) < browserURLRefreshInterval {
             return cached.snapshot
         }
@@ -378,8 +403,8 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
         body {
           font-family: -apple-system, BlinkMacSystemFont, "SF Pro Display", "Helvetica Neue", sans-serif;
           background:
-            radial-gradient(circle at 50% 48%, rgba(255,255,255,.08), transparent 27rem),
-            linear-gradient(135deg, #040404 0%, #181818 45%, #050505 100%);
+            radial-gradient(circle at 50% 48%, rgba(255,255,255,.10), transparent 27rem),
+            linear-gradient(135deg, #050505 0%, #160c0c 42%, #040404 100%);
           color: rgba(255,255,255,.9);
           overflow: hidden;
         }
@@ -393,19 +418,26 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
         }
         .center { text-align: center; align-self: end; }
         .icon {
-          width: 52px; height: 52px; border-radius: 14px; margin: 0 auto 28px;
+          width: 64px; height: 64px; border-radius: 16px; margin: 0 auto 30px;
           display: grid; place-items: center;
-          background: linear-gradient(145deg, #20a063, #0f603d);
-          box-shadow: 0 14px 40px rgba(0,0,0,.35), inset 0 1px rgba(255,255,255,.22);
+          background: linear-gradient(145deg, #ff4033, #8b0f0a);
+          box-shadow: 0 18px 50px rgba(0,0,0,.42), inset 0 1px rgba(255,255,255,.22);
         }
-        .icon span { font-size: 28px; transform: translateY(-1px); }
+        .icon span { font-size: 34px; transform: translateY(-1px); }
         h1 {
           margin: 0;
-          font-size: clamp(28px, 3vw, 44px);
-          line-height: 1.15;
+          font-size: clamp(56px, 12vw, 168px);
+          line-height: .88;
           letter-spacing: 0;
+          font-weight: 900;
+          color: rgba(255,255,255,.96);
+          text-transform: uppercase;
+        }
+        .blocked {
+          margin: 28px 0 0;
+          font-size: clamp(18px, 2vw, 31px);
           font-weight: 700;
-          color: rgba(255,255,255,.86);
+          color: rgba(255,255,255,.62);
         }
         a.snooze {
           margin-top: 44px;
@@ -434,8 +466,9 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
         <main>
           <div></div>
           <section class="center">
-            <div class="icon"><span>✓</span></div>
-            <h1>\(escapedName) has been blocked by Focus</h1>
+            <div class="icon"><span>!</span></div>
+            <h1>GET UP NOW</h1>
+            <p class="blocked">\(escapedName) is blocked by Focus.</p>
             <a class="snooze" href="focusapp://snooze?target=\(urlEscaped(blockedKey))">↺ Snooze for 3 minutes</a>
           </section>
           <p class="hint">End your focus session to access this page.</p>
@@ -498,30 +531,33 @@ class FocusManager: NSObject, ObservableObject, NSWindowDelegate {
     }
     
     private func showBlockerWindow() {
+        if let blockerWindow {
+            blockerWindow.orderFrontRegardless()
+            NSApp.activate(ignoringOtherApps: true)
+            return
+        }
+
         let promptView = PasswordPromptView()
             .environmentObject(self)
         
         let hostingController = NSHostingController(rootView: promptView)
         
         let window = NSWindow(contentViewController: hostingController)
-        window.styleMask = [.titled, .closable, .fullSizeContentView] // Standard style
+        window.styleMask = [.borderless, .fullSizeContentView]
         window.title = "Time's Up"
         window.titleVisibility = .hidden
         window.isOpaque = false
         window.backgroundColor = NSColor.clear
-        window.level = .floating // Keep on top
-        window.center()
+        window.level = .screenSaver
+        window.collectionBehavior = [.canJoinAllSpaces, .fullScreenAuxiliary]
+        window.setFrame(NSScreen.main?.frame ?? NSRect(x: 0, y: 0, width: 920, height: 620), display: true)
         window.isReleasedWhenClosed = false
-        
-        // Enable close button
-        window.standardWindowButton(.closeButton)?.isHidden = false
-        window.standardWindowButton(.miniaturizeButton)?.isHidden = true
-        window.standardWindowButton(.zoomButton)?.isHidden = true
         
         window.delegate = self
 
         self.blockerWindow = window
         window.orderFrontRegardless()
+        NSApp.activate(ignoringOtherApps: true)
     }
     
     private func checkAndSendNotification(remaining: TimeInterval, appName: String) {
