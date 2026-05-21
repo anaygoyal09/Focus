@@ -1,0 +1,41 @@
+name: Release DMG
+
+on:
+  push:
+    tags:
+      - "v*"
+  workflow_dispatch:
+    inputs:
+      tag:
+        description: "Existing tag to publish/upload Focus.dmg for (for example: v1.2.3)"
+        required: true
+
+permissions:
+  contents: write
+
+jobs:
+  build-and-upload-dmg:
+    runs-on: macos-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Build Focus executable
+        run: swift build -c release --package-path FocusApp
+
+      - name: Update Focus.app bundle executable
+        run: |
+          cp FocusApp/.build/release/FocusApp FocusApp/Focus.app/Contents/MacOS/FocusApp
+          chmod +x FocusApp/Focus.app/Contents/MacOS/FocusApp
+
+      - name: Create DMG
+        run: |
+          APP_STAGE_DIR="$(mktemp -d)"
+          cp -R FocusApp/Focus.app "$APP_STAGE_DIR/Focus.app"
+          hdiutil create -volname "Focus" -srcfolder "$APP_STAGE_DIR" -ov -format UDZO Focus.dmg
+
+      - name: Upload DMG to release
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ github.event_name == 'workflow_dispatch' && github.event.inputs.tag || github.ref_name }}
+          files: Focus.dmg

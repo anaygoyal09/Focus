@@ -115,6 +115,13 @@ swift build -c release
 cp .build/release/FocusApp Focus.app/Contents/MacOS/FocusApp
 ```
 
+### Release DMG Automation
+
+- Pushing a tag that starts with `v` (for example, `v1.2.3`) runs `.github/workflows/release-dmg.yml`.
+- That workflow builds the app, packages `Focus.app` into `Focus.dmg`, and uploads the DMG to the matching GitHub Release.
+- You can also run the workflow manually with **Run workflow** and provide an existing tag.
+- The DMG is unsigned/not notarized unless signing credentials are configured separately.
+
 ## Privacy
 
 Focus runs entirely locally on your Mac. No data is sent to any external servers. Your usage data is stored locally in your Documents folder.
