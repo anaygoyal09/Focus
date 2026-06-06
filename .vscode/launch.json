@@ -4,7 +4,7 @@
             "type": "swift",
             "request": "launch",
             "args": [],
-            "cwd": "${workspaceFolder:Focus}/FocusApp",
+            "cwd": "${workspaceFolder:Focus}",
             "name": "Debug FocusApp (FocusApp)",
             "target": "FocusApp",
             "configuration": "debug",
@@ -14,11 +14,31 @@
             "type": "swift",
             "request": "launch",
             "args": [],
-            "cwd": "${workspaceFolder:Focus}/FocusApp",     
+            "cwd": "${workspaceFolder:Focus}",
             "name": "Release FocusApp (FocusApp)",
             "target": "FocusApp",
             "configuration": "release",
             "preLaunchTask": "swift: Build Release FocusApp (FocusApp)"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:FocusApp}",
+            "name": "Debug FocusApp",
+            "target": "FocusApp",
+            "configuration": "debug",
+            "preLaunchTask": "swift: Build Debug FocusApp"
+        },
+        {
+            "type": "swift",
+            "request": "launch",
+            "args": [],
+            "cwd": "${workspaceFolder:FocusApp}",
+            "name": "Release FocusApp",
+            "target": "FocusApp",
+            "configuration": "release",
+            "preLaunchTask": "swift: Build Release FocusApp"
         }
     ]
 }
