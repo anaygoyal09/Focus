@@ -4,6 +4,12 @@ Focus is a macOS menu bar app for protecting deep work time. It helps you start 
 
 The app is built with SwiftUI and AppKit, and runs as a lightweight menu bar utility.
 
+## Download and try it
+
+[Download Focus.dmg](https://raw.githubusercontent.com/anaygoyal09/Focus/main/dist/Focus.dmg)
+
+When the link works, your browser should download a file named `Focus.dmg`. Open the DMG, then open `Focus.app`. Because this build is not codesigned, macOS may ask you to right-click the app and choose Open.
+
 ## What the app contains
 
 ### Menu bar focus control
