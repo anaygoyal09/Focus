@@ -6,7 +6,7 @@ The app is built with SwiftUI and AppKit, and runs as a lightweight menu bar uti
 
 ## Download and try it
 
-[Download Focus.dmg](https://raw.githubusercontent.com/anaygoyal09/Focus/main/dist/Focus.dmg)
+[Download Focus.dmg](https://github.com/anaygoyal09/Focus/releases/download/v1.0.0/Focus-1.dmg)
 
 When the link works, your browser should download a file named `Focus.dmg`. Open the DMG, then open `Focus.app`. Because this build is not codesigned, macOS may ask you to right-click the app and choose Open.
 
