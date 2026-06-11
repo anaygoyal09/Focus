@@ -256,7 +256,7 @@ public final class FocusManager: ObservableObject {
             automationStatus[browser.bundleIdentifier] = .unsupported
             return
         }
-        Task { await performAutomationRequest(for: browser, allowReset: true) }
+        Task { await performAutomationRequest(for: browser) }
     }
 
     private func preflightAutomationForRunningBrowsers() async {
@@ -286,9 +286,9 @@ public final class FocusManager: ObservableObject {
         }
     }
 
-    private func performAutomationRequest(for browser: BrowserInfo, allowReset: Bool, silent: Bool = false) async {
+    private func performAutomationRequest(for browser: BrowserInfo) async {
         let bid = browser.bundleIdentifier
-        focusLog.info("[\(bid, privacy: .public)] request begin (allowReset=\(allowReset))")
+        focusLog.info("[\(bid, privacy: .public)] request begin")
         await MainActor.run { self.automationStatus[bid] = .opening }
         guard let pid = await ensureBrowserRunning(browser) else {
             focusLog.error("[\(bid, privacy: .public)] could not launch browser")
@@ -330,41 +330,13 @@ public final class FocusManager: ObservableObject {
             // needsPermission so the next click re-prompts (no reset).
             await MainActor.run { self.automationStatus[bid] = .needsPermission }
         case .notPermitted:
-            if allowReset {
-                // First try the targeted reset.
-                await MainActor.run { self.automationStatus[bid] = .resetting }
-                await resetAutomationTCC()
-                try? await Task.sleep(nanoseconds: 600_000_000)
-                await MainActor.run {
-                    self.automationStatus[bid] = .waitingForPrompt
-                    NSApp.activate(ignoringOtherApps: true)
-                }
-                var retry = await runProbe(for: browser)
-                focusLog.info("[\(bid, privacy: .public)] retry probe = \(String(describing: retry), privacy: .public)")
-
-                // If targeted reset didn't take, try the full AppleEvents reset.
-                if case .notPermitted = retry {
-                    focusLog.info("[\(bid, privacy: .public)] targeted reset did not clear cache, falling back to full reset")
-                    await MainActor.run { self.automationStatus[bid] = .resetting }
-                    await resetAllAppleEventsTCC()
-                    try? await Task.sleep(nanoseconds: 800_000_000)
-                    await MainActor.run {
-                        self.automationStatus[bid] = .waitingForPrompt
-                        NSApp.activate(ignoringOtherApps: true)
-                    }
-                    retry = await runProbe(for: browser)
-                    focusLog.info("[\(bid, privacy: .public)] retry-2 probe = \(String(describing: retry), privacy: .public)")
-                }
-
-                await MainActor.run { self.automationStatus[bid] = retry.toStatus() }
-            } else {
-                await MainActor.run { self.automationStatus[bid] = .denied }
-            }
+            // User denied the macOS prompt — mark as denied and let them use
+            // Reset / Force Reset explicitly if they want to re-prompt.
+            await MainActor.run { self.automationStatus[bid] = .denied }
         case .failed(let code):
             focusLog.error("[\(bid, privacy: .public)] probe failed code=\(code)")
             await MainActor.run { self.automationStatus[bid] = .failed }
         }
-        _ = silent
     }
 
     private enum AutomationPreflight {
