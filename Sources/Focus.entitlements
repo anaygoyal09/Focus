@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <!--
+      Required so the app can send Apple Events (control browsers/apps,
+      read the active tab URL) while the hardened runtime is enabled.
+      Without this, macOS blocks all automation at the OS level and the
+      Automation permission shows "denied" no matter how often it is granted.
+    -->
+    <key>com.apple.security.automation.apple-events</key>
+    <true/>
+
+    <!--
+      Allow the hardened runtime to load the unsigned/ad-hoc Swift runtime
+      dylibs that ship inside the bundle. Avoids launch/codesign issues when
+      signing with an ad-hoc or self-signed identity.
+    -->
+    <key>com.apple.security.cs.disable-library-validation</key>
+    <true/>
+</dict>
+</plist>
